@@ -133,3 +133,12 @@ Project implementation and git milestones are based on waterfall model
       - Database implementation - Code First metologie, EF (Entity Framework) as ORM
       - API implementation -> back-end - RESTfull API - data first metologie
       - UI (User Interface) implementation -> front-end - MVC project
+
+
+## Software architecture
+Layered, N-Tier architectire with:
+  1. Data Tier
+  2. Logic Tier
+  3. Presentation Tier
+
+  *For more details read [software-architecture document](./documentation/software-architecture.md)*
