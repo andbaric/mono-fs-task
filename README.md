@@ -108,7 +108,7 @@
 
        > git commit -m '#pullRequestNumber discussion resolve' 
         e.g. :  
-        <code>git commit -m '!3 discussion resolve'</code> 
+        <code>git commit -m '#3 discussion resolve'</code> 
     10. Remove the temporary branch
 
 
