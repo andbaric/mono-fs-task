@@ -69,7 +69,7 @@
     3. Development(default branch, protected)  
       Application version in development environment, mostly locally tested
 
-      *There are more temporary branches created from **development** for each issue and merged back when merge request is code reviewed*   
+      *There are more temporary branches created from **development** for each issue and merged back after pull request is code review*  
 
     Three types of temporary branches(prefixed by issue type) for e.g. :
       1. documentation/project-setup - for issue type DOCUMENTATION
@@ -106,7 +106,7 @@
     8. Push the changes and create merge reques.
     9. Fix potential code review remarks and push the changes with
 
-       > git commit -m '!mergeRequestNumber discussion resolve' 
+       > git commit -m '#pullRequestNumber discussion resolve' 
         e.g. :  
         <code>git commit -m '!3 discussion resolve'</code> 
     10. Remove the temporary branch
