@@ -11,3 +11,14 @@ Based on MySQL relational database.
   * ER(Entity-Relationship) model
 
   ![Software architecture](./images/entity-relations.png)
+
+### 2. Logic Tier
+Based on ASP.NET Core Web API
+  * Class diagram
+
+  ![Software architecture](./images/logic-class-diagram.png)
+
+### 3. Presentation Tier
+Based on ASP.NET Core Web App (Model-View-Controller)
+  * Class diagram
+    * Administration view model 
