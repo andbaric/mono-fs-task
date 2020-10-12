@@ -1,12 +1,13 @@
-using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Project.Service.Models
 {
-    public class VehicleModel
-    {
-      public int Id { get; set; }
-      public int MakeId { get; set; }
-      public string Name { get; set; }
-      public string Abrv { get; set; }
-    }
+  [Table("vehicle_model")]
+  public class VehicleModel : BaseModel
+  {
+    public string Name { get; set; }
+    public string Abrv { get; set; }
+
+    public int MakeId { get; set; }
+  }
 }
