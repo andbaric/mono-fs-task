@@ -17,6 +17,7 @@ namespace Project.Service.DataAccess
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
       modelBuilder.DecribeRelationships();
+      modelBuilder.SeedData();
     }
   }
 }
