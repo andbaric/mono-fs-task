@@ -1,0 +1,7 @@
+namespace Project.Service.Models
+{
+  public class BaseModel
+  {
+    public int Id { get; set; }
+  }
+}
