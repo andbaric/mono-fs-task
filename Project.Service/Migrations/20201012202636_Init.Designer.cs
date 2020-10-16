@@ -2,14 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Project.Service.DataAccess;
+using Project.Service.Models;
 
 namespace Project.Service.DataAccess.Migrations
 {
     [DbContext(typeof(VehicleDbContext))]
-    [Migration("20201012203736_VehicleMakeDataSeed")]
-    partial class VehicleMakeDataSeed
+    [Migration("20201012202636_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,26 +32,6 @@ namespace Project.Service.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("vehicle_make");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 325,
-                            Abrv = "BMW",
-                            Name = "BMW"
-                        },
-                        new
-                        {
-                            Id = 100,
-                            Abrv = "Ford",
-                            Name = "Ford"
-                        },
-                        new
-                        {
-                            Id = 200,
-                            Abrv = "VW",
-                            Name = "Volkswagen"
-                        });
                 });
 
             modelBuilder.Entity("Project.Service.Models.VehicleModel", b =>
