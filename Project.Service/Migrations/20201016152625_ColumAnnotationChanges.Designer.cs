@@ -3,13 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Project.Service.DataAccess;
+using Project.Service.Models;
 
 namespace Project.Service.DataAccess.Migrations
 {
     [DbContext(typeof(VehicleDbContext))]
-    [Migration("20201012203917_VehicleModelDataSeed")]
-    partial class VehicleModelDataSeed
+    [Migration("20201016152625_ColumAnnotationChanges")]
+    partial class ColumAnnotationChanges
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -25,9 +25,11 @@ namespace Project.Service.DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Abrv")
+                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
@@ -62,12 +64,14 @@ namespace Project.Service.DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Abrv")
+                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<int>("MakeId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");

@@ -1,7 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Project.Service.Models
 {
-  public class BaseModel
-  {
-    public int Id { get; set; }
-  }
+    public class BaseModel
+    {
+        [Key]
+        public int Id { get; set; }
+    }
 }
