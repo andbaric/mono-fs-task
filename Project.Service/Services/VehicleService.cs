@@ -64,7 +64,7 @@ namespace Project.Service.Services
             }
             catch (InvalidOperationException ex)
             {
-                return ex;
+                return null;
             }
         }
 
@@ -83,7 +83,7 @@ namespace Project.Service.Services
             }
             catch (InvalidOperationException ex)
             {
-                return ex;
+                return null;
             }
         }
 
