@@ -66,7 +66,7 @@ namespace Project.Service.Models
                 new VehicleModel { Id= 33, MakeId = 14, Name = "Rio (Kia)", Abrv = "Rio" },
                 new VehicleModel { Id= 34, MakeId = 16, Name = "Qashqai (Nissan)", Abrv = "Qashqai" },
                 new VehicleModel { Id= 35, MakeId = 16, Name = "Juke (Nissan)", Abrv = "Juke" },
-                new VehicleModel { Id= 36, MakeId = 17, Name = "Concept_One 7 (Rimac)", Abrv = "Concept_One" },
+                new VehicleModel { Id= 36, MakeId = 17, Name = "Concept_One (Rimac)", Abrv = "Concept_One" },
             };
             modelBuilder.Entity<VehicleModel>().HasData(vehicleModels);
         }

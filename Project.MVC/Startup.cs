@@ -19,21 +19,19 @@ namespace Project.MVC
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IVehicleService, VehicleService>();
-            services.AddDbContext<VehicleDbContext>(opt =>
+            services.AddDbContext<VehicleDbContext>(options =>
             {
-                opt.UseMySql(Configuration.GetConnectionString("VehicleDb"));
+                options.UseMySql(Configuration.GetConnectionString("VehicleDb"));
             });
             services
                 .AddControllersWithViews()
                 .AddNewtonsoftJson();
-           services.AddOData();
+            services.AddOData();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
