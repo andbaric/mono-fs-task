@@ -3,6 +3,8 @@ using Project.Service.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Project.Service.Services
 {
@@ -14,84 +16,103 @@ namespace Project.Service.Services
             _context = context;
         }
 
-        public Task<ActionResult<VehicleMake>> CreateVehicleMake(VehicleMake newVehicleMake)
+        public async Task<ActionResult<VehicleMake>> CreateVehicleMake(VehicleMake newVehicleMake)
         {
-            throw new System.NotImplementedException();
+            _context.VehicleMakes.Add(newVehicleMake);
+            await _context.SaveChangesAsync();
+
+            return newVehicleMake;
         }
 
-        public Task<ActionResult<VehicleModel>> CreateVehicleModel(VehicleModel newVehicleModel)
+        public async Task<ActionResult<VehicleModel>> CreateVehicleModel(VehicleModel newVehicleModel)
         {
-            throw new System.NotImplementedException();
+            _context.VehicleModels.Add(newVehicleModel);
+            await _context.SaveChangesAsync();
+
+            return newVehicleModel;
         }
 
-        public Task<ActionResult<VehicleMake>> DeleteVehicleMake(int id)
+        public async Task<ActionResult<VehicleMake>> DeleteVehicleMake(int id)
         {
-            throw new System.NotImplementedException();
+            var existingMake = (await GetVehicleMake(id)).Value;
+
+            _context.VehicleMakes.Remove(existingMake);
+
+            await _context.SaveChangesAsync();
+
+            return existingMake;
         }
 
-        public Task<ActionResult<VehicleModel>> DeleteVehicleModel(int id)
+        public async Task<ActionResult<VehicleModel>> DeleteVehicleModel(int id)
         {
-            throw new System.NotImplementedException();
+            var existingModel = (await GetVehicleModel(id)).Value;
+
+            _context.VehicleModels.Remove(existingModel);
+
+            await _context.SaveChangesAsync();
+            
+            return existingModel;
         }
 
-        public Task<ActionResult<VehicleMake>> FilterVehicleMake(string filterBy)
+        public async Task<ActionResult<VehicleMake>> GetVehicleMake(int id)
         {
-            throw new System.NotImplementedException();
+            var query = _context.VehicleMakes.AsQueryable();
+
+            try
+            {
+                return await query.SingleOrDefaultAsync(p => p.Id == id);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return ex;
+            }
         }
 
-        public Task<ActionResult<VehicleMake>> FilterVehicleModels(string filterBy)
+        public async Task<ActionResult<IEnumerable<VehicleMake>>> GetVehicleMakes()
         {
-            throw new System.NotImplementedException();
+            return await _context.VehicleMakes.ToListAsync();
         }
 
-        public Task<ActionResult<VehicleMake>> GetVehicleMake(int id)
+        public async Task<ActionResult<VehicleModel>> GetVehicleModel(int id)
         {
-            throw new System.NotImplementedException();
+            var query = _context.VehicleModels.AsQueryable();
+
+            try
+            {
+                return await query.SingleOrDefaultAsync(p => p.Id == id);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return ex;
+            }
         }
 
-        public Task<ActionResult<IEnumerable<VehicleMake>>> GetVehicleMakes()
+        public async Task<ActionResult<IEnumerable<VehicleModel>>> GetVehicleModels()
         {
-            throw new System.NotImplementedException();
+            return await _context.VehicleModels.ToListAsync();
         }
 
-        public Task<ActionResult<VehicleModel>> GetVehicleModel(int id)
+
+        public async Task<ActionResult<VehicleMake>> UpdateVehicleMake(int id, VehicleMake updatedVehicleMake)
         {
-            throw new System.NotImplementedException();
+            var existingMake = (await GetVehicleMake(id)).Value;
+
+            _context.Entry(existingMake).CurrentValues.SetValues(updatedVehicleMake);
+
+            await _context.SaveChangesAsync();
+
+            return existingMake;
         }
 
-        public Task<ActionResult<IEnumerable<VehicleModel>>> GetVehicleModels()
+        public async Task<ActionResult<VehicleModel>> UpdateVehicleModel(int id, VehicleModel updatedVehicleModel)
         {
-            throw new System.NotImplementedException();
-        }
+            var existingModel = (await GetVehicleModel(id)).Value;
 
-        public Task<ActionResult<VehicleMake>> PaginateVehicleMake(int pageNum)
-        {
-            throw new System.NotImplementedException();
-        }
+            _context.Entry(existingModel).CurrentValues.SetValues(updatedVehicleModel);
 
-        public Task<ActionResult<VehicleMake>> PaginateVehicleModels(int pageNum)
-        {
-            throw new System.NotImplementedException();
-        }
+            await _context.SaveChangesAsync();
 
-        public Task<ActionResult<IEnumerable<VehicleMake>>> SortVehicleMakes(string sortBy)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<ActionResult<IEnumerable<VehicleMake>>> SortVehicleModels(string sortBy)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<ActionResult<VehicleMake>> UpdateVehicleMake(int id, VehicleMake updatedVehicleMake)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<ActionResult<VehicleModel>> UpdateVehicleModel(int id, VehicleModel updatedVehicleModel)
-        {
-            throw new System.NotImplementedException();
+            return existingModel;
         }
     }
 }
