@@ -13,19 +13,11 @@ namespace Project.Service.Services
         Task<ActionResult<VehicleMake>> UpdateVehicleMake(int id, VehicleMake updatedVehicleMake);
         Task<ActionResult<VehicleMake>> DeleteVehicleMake(int id);
 
-        Task<ActionResult<IEnumerable<VehicleMake>>> SortVehicleMakes(string sortBy);
-        Task<ActionResult<VehicleMake>> FilterVehicleMake(string filterBy);
-        Task<ActionResult<VehicleMake>> PaginateVehicleMake(int pageNum);
-
 
         Task<ActionResult<IEnumerable<VehicleModel>>> GetVehicleModels();
         Task<ActionResult<VehicleModel>> CreateVehicleModel(VehicleModel newVehicleModel);
         Task<ActionResult<VehicleModel>> GetVehicleModel(int id);
         Task<ActionResult<VehicleModel>> UpdateVehicleModel(int id, VehicleModel updatedVehicleModel);
         Task<ActionResult<VehicleModel>> DeleteVehicleModel(int id);
-
-        Task<ActionResult<IEnumerable<VehicleMake>>> SortVehicleModels(string sortBy);
-        Task<ActionResult<VehicleMake>> FilterVehicleModels(string filterBy);
-        Task<ActionResult<VehicleMake>> PaginateVehicleModels(int pageNum);
     }
 }

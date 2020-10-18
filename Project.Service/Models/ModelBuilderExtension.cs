@@ -9,9 +9,9 @@ namespace Project.Service.Models
         {
             var vehicleMakes = new List<VehicleMake>
             {
-            new VehicleMake { Id = 325, Name = "BMW", Abrv = "BMW" },
-            new VehicleMake { Id = 100, Name = "Ford", Abrv = "Ford" },
-            new VehicleMake { Id = 200, Name = "Volkswagen", Abrv = "VW" }
+                new VehicleMake { Id = 325, Name = "BMW", Abrv = "BMW" },
+                new VehicleMake { Id = 100, Name = "Ford", Abrv = "Ford" },
+                new VehicleMake { Id = 200, Name = "Volkswagen", Abrv = "VW" }
             };
             modelBuilder.Entity<VehicleMake>().HasData(vehicleMakes);
 
