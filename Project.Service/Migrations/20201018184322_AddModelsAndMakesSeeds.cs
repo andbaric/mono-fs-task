@@ -100,7 +100,7 @@ namespace Project.Service.DataAccess.Migrations
                     { 15, "Focus", 6, "Focus (Ford)" },
                     { 16, "206", 7, "206 (Peugeot)" },
                     { 35, "Juke", 16, "Juke (Nissan)" },
-                    { 36, "Concept_One", 17, "Concept_One 7 (Rimac)" }
+                    { 36, "Concept_One", 17, "Concept_One (Rimac)" }
                 });
         }
 

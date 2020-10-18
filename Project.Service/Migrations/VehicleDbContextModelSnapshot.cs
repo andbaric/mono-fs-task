@@ -413,7 +413,14 @@ namespace Project.Service.DataAccess.Migrations
                             Id = 36,
                             Abrv = "Concept_One",
                             MakeId = 17,
-                            Name = "Concept_One 7 (Rimac)"
+                            Name = "Concept_One (Rimac)"
+                        },
+                        new
+                        {
+                            Id = 37,
+                            Abrv = "Concept_One",
+                            MakeId = 17,
+                            Name = "Concept_One (Rimac)"
                         });
                 });
 
