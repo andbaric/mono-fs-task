@@ -6,16 +6,32 @@
 ![Software architecture](./images/software-architecture.png)
 
 ### 1. Data Tier
-Based on MySQL relational database.
+Based on MySQL relational database.  
+Folder: Project.Service
+
+
   * ER(Entity-Relationship) model
-  ![Software architecture](./images/entity-relations.png)
+  ![Software architecture](./images/erm-diagram.png)
 
+---
 ### 2. Logic Tier
-Based on ASP.NET Core Web API
-  * Class diagram
+Based on ASP.NET Core API (Project.MVC/Controllers)  
+**API routes:**  
+  *[Routes details documentation](./Project.MVC/routes.md)* 
 
-    ![Software architecture](./images/logic-class-diagram.png)
-
+  Route structure logic: {apiPrefix}/{controller} 
+  * Public routes:  
+  **AdministrationController** routes:  
+  Route base: **api/administration**  
+  Features:  
+    * Makes: 
+      * CRUD operations on makes
+      * Sort query: by Name and Abrv properties  
+    * Models
+      * CRUD operations on models
+      * Sort query: by Name and Abrv properties
+   
+     
 ### 3. Presentation Tier
 Based on ASP.NET Core Web App (Model-View-Controller)
   * Class diagram
@@ -24,3 +40,5 @@ Based on ASP.NET Core Web App (Model-View-Controller)
   * UI mockups:
     * Administration view
     ![Software architecture](./images/ui-mockups.png)
+
+
