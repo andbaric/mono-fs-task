@@ -20,7 +20,7 @@ namespace Project.MVC.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return Redirect("~/administration");
         }
 
         public IActionResult Privacy()
