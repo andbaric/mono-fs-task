@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Net;
 
 namespace Project.Service.Services
 {
@@ -34,24 +35,30 @@ namespace Project.Service.Services
 
         public async Task<ActionResult<VehicleMake>> DeleteVehicleMake(int id)
         {
-            var existingMake = (await GetVehicleMake(id)).Value;
+            var targetMake = (await GetVehicleMake(id)).Value;
 
-            _context.VehicleMakes.Remove(existingMake);
+            if (targetMake != null)
+            {
+                _context.VehicleMakes.Remove(targetMake);
 
-            await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+            }
 
-            return existingMake;
+            return targetMake;
         }
 
         public async Task<ActionResult<VehicleModel>> DeleteVehicleModel(int id)
         {
-            var existingModel = (await GetVehicleModel(id)).Value;
+            var targetModel = (await GetVehicleModel(id)).Value;
 
-            _context.VehicleModels.Remove(existingModel);
+            if (targetModel != null)
+            {
+                _context.VehicleModels.Remove(targetModel);
 
-            await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+            }
             
-            return existingModel;
+            return targetModel;
         }
 
         public async Task<ActionResult<VehicleMake>> GetVehicleMake(int id)

@@ -20,18 +20,18 @@ Based on ASP.NET Core API (Project.MVC/Controllers)
         {
           "name": string,
           "abrv": string,
-          "id"?: int
         }
         ```
 
-        <u>**response**</u>: Status: 200 OK, data type: JSON created object
-        ```
-        {
-          "name": string,
-          "abrv": string,
-          "id": int
-        }
-        ```  
+        <u>**response**</u>: 
+        * Status: 200 OK, data type: JSON created object
+          ```
+          {
+            "name": string,
+            "abrv": string,
+            "id": int
+          }
+          ```  
 
     * Read  
       * One make  
@@ -44,14 +44,19 @@ Based on ASP.NET Core API (Project.MVC/Controllers)
           api/administration/{makeId}
           ```
 
-          <u>**response**</u>: Status: 200 OK, JSON object
-          ```
-          {
-            name: string,
-            abrv: string,
-            id: {makeID} int
-          }
-          ```
+          <u>**response**</u>: 
+          * Status: 200 OK, JSON object
+            ```
+            {
+              name: string,
+              abrv: string,
+              id: {makeID} int
+            }
+            ```
+          * Status: 404 NotFound
+            ```
+            Status Code: 404; Not Found
+            ```
 
       *  All makes  
           method: **GET**  
@@ -66,11 +71,11 @@ Based on ASP.NET Core API (Project.MVC/Controllers)
             * Status: 200 OK, data type: JSON object array
               ```
               [
-                {
-                  "name": string,
-                  "abrv": string,
-                  "id": int
-                }, ...
+                ?{
+                    "name": string,
+                    "abrv": string,
+                    "id": int
+                  }, ...
               ]
               ```
 
@@ -88,14 +93,19 @@ Based on ASP.NET Core API (Project.MVC/Controllers)
           }
         ]
         ```
-        <u>**response**</u>: 200 OK, new JSON object
-        ```
-        {
-          "name": string,
-          "abrv": string,
-          "id": int
-        }
-        ```
+        <u>**response**</u>: 
+        * 200 OK, new JSON object
+          ```
+          {
+            "name": string,
+            "abrv": string,
+            "id": int
+          }
+          ```
+        * Status: 404 NotFound
+          ```
+          Status Code: 404; Not Found
+          ```
           
 
     * Delete make  
@@ -108,14 +118,14 @@ Based on ASP.NET Core API (Project.MVC/Controllers)
       api/administration/makes/{makeId}
        ```
 
-      <u>**response**</u>: deleted JSON object
-      ```
-      {
-        "name": string,
-        "abrv": string,
-        "id": int
-      }
-      ```
+      <u>**response**</u>: 
+      * Status: No Content
+
+      * Status: 404 NotFound
+          ```
+          Status Code: 404; Not Found
+          ```
+
     ---
     Allowed url queryes (Through the OData)
     * Sort  
@@ -182,19 +192,20 @@ Based on ASP.NET Core API (Project.MVC/Controllers)
     {
       "name": string,
       "abrv": string,
-      "id"?: int
+      "makeId": int
     }
     ```
 
-    <u>**response**</u>: Status: 200 OK, data type: JSON created object
-    ```
-    {
-      "name": string,
-      "abrv": string,
-      "makeId": {makeId} int,
-      "id": {modelId} int
-    }
-    ```  
+    <u>**response**</u>: 
+    *Status: 200 OK, data type: JSON created object
+      ```
+      {
+        "name": string,
+        "abrv": string,
+        "makeId": {makeId} int,
+        "id": {modelId} int
+      }
+      ```  
 
     * Read  
       * One model  
@@ -207,15 +218,20 @@ Based on ASP.NET Core API (Project.MVC/Controllers)
           api/administration/{modelId}
           ```
 
-          <u>**response**</u>: Status: 200 OK, JSON object
-          ```
-          {
-            "name": string,
-            "abrv": string,
-            "makeId": {makeId} int,
-            "id": {modelId} int
-          }
-          ```
+          <u>**response**</u>: 
+          * Status: 200 OK, JSON object
+            ```
+            {
+              "name": string,
+              "abrv": string,
+              "makeId": {makeId} int,
+              "id": {modelId} int
+            }
+            ```
+          * Status: 404 NotFound
+            ```
+            Status Code: 404; Not Found
+            ```
 
       *  All models  
           method: **GET**  
@@ -253,15 +269,21 @@ Based on ASP.NET Core API (Project.MVC/Controllers)
           }
         ]
         ```
-        <u>**response**</u>: new JSON object
-        ```
-        {
-          "name": string,
-          "abrv": string,
-          "makeId": {makeId} int,
-          "id": {modelId} int
-        }
-        ```
+        <u>**response**</u>: 
+        * 200 OK, JSON object
+          ```
+          {
+            "name": string,
+            "abrv": string,
+            "makeId": {makeId} int,
+            "id": {modelId} int
+          }
+          ```
+        * Status: 404 NotFound
+          ```
+          Status Code: 404; Not Found
+          ```
+
           
 
     * Delete  
@@ -273,18 +295,15 @@ Based on ASP.NET Core API (Project.MVC/Controllers)
       ```
       api/administration/models/{modelId}
       ```
-      <u>**response**</u>: deleted JSON object
-      ```
-      {
-        "name": string,
-        "abrv": string,
-        "makeId": {makeId} int,
-        "id": {modelId} int
-      }
-      ```
+      <u>**response**</u>: 
+      * No Content
+      * Status: 404 NotFound
+        ```
+        Status Code: 404; Not Found
+        ```
     ---
     Allowed url queryes (Through the OData)
-    * Sorted makes list, allowed sort by properties: Name and Abrv  
+    * Sorted makes list, allowed sort by properties: Name and Abrv   
       * Sort by Name  
         method: **GET**  
         params: key = $orderby value = name  
