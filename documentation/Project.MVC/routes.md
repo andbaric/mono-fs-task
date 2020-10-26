@@ -303,7 +303,7 @@ Based on ASP.NET Core API (Project.MVC/Controllers)
         ```
     ---
     Allowed url queryes (Through the OData)
-    * Sorted makes list, allowed sort by properties: Name and Abrv  
+    * Sorted makes list, allowed sort by properties: Name and Abrv   
       * Sort by Name  
         method: **GET**  
         params: key = $orderby value = name  
