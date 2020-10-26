@@ -27,39 +27,51 @@ namespace Project.MVC.Controllers
         [HttpGet("makes/{id}")]
         public async Task<ActionResult<IEnumerable<VehicleMake>>> GetVehicleMake(int id)
         {
-            var makeResult = await _vehicleService.GetVehicleMake(id);
+            var vehicleMakeGetResult = (await _vehicleService.GetVehicleMake(id)).Value;
 
-            return Json(makeResult.Value);
+            if (vehicleMakeGetResult == null) return NotFound();
+
+            return Json(vehicleMakeGetResult);
         }
 
         [HttpPost("makes")]
         public async Task<ActionResult<VehicleMake>> CreateVehicleMake([FromBody] VehicleMake newVehicleMake)
         {
-            var createdMake = await _vehicleService.CreateVehicleMake(newVehicleMake);
+            var createdMake = (await _vehicleService.CreateVehicleMake(newVehicleMake)).Value;
 
-            return Json(createdMake.Value);
+            return Created($"/api/administration/makes/{createdMake.Id}", createdMake);
         }
 
         [HttpPatch("makes/{id}")]
         public async Task<ActionResult<VehicleMake>> UpdateVehicleMake(int id, [FromBody] JsonPatchDocument<VehicleMake> makePatch)
         {
-            if (makePatch == null) return BadRequest(ModelState);
+            if (makePatch != null)
+            {
+         
+                var targetMake = (await _vehicleService.GetVehicleMake(id)).Value;
 
-            var updatedMake = (await _vehicleService.GetVehicleMake(id)).Value;
+                if (targetMake == null) return NotFound();
 
-            makePatch.ApplyTo(updatedMake);
+                makePatch.ApplyTo(targetMake, ModelState);
 
-            await _vehicleService.UpdateVehicleMake(id, updatedMake);
+                if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            return Json(updatedMake);
+                await _vehicleService.UpdateVehicleMake(id, targetMake);
+
+                return Json(targetMake);
+            }
+
+            return BadRequest(ModelState);
         }
 
         [HttpDelete("makes/{id}")]
         public async Task<ActionResult<VehicleMake>> DeleteVehicleMake(int id)
         {
-            var deletedMake = (await _vehicleService.DeleteVehicleMake(id)).Value;
+            var targetMake = (await _vehicleService.DeleteVehicleMake(id)).Value;
 
-            return Json(deletedMake);
+            if (targetMake == null) return NotFound();
+
+            return NoContent();
         }
 
 
@@ -73,39 +85,51 @@ namespace Project.MVC.Controllers
         [HttpGet("models/{id}")]
         public async Task<ActionResult<IEnumerable<VehicleModel>>> GetVehicleModel(int id)
         {
-            var modelResult = await _vehicleService.GetVehicleModel(id);
+            var vehicleMakeGetResult = (await _vehicleService.GetVehicleModel(id)).Value;
 
-            return Json(modelResult.Value);
+            if (vehicleMakeGetResult == null) return NotFound();
+
+            return Json(vehicleMakeGetResult);
         }
 
         [HttpPost("models")]
         public async Task<ActionResult<VehicleModel>> CreateVehicleModel([FromBody] VehicleModel newVehicleModel)
         {
-            var createdModel = await _vehicleService.CreateVehicleModel(newVehicleModel);
+            var createdModel = (await _vehicleService.CreateVehicleModel(newVehicleModel)).Value;
 
-            return Created($"/api/models/{createdModel.Value.Id}" , createdModel.Value);
+            return Created($"/api/administration/models/{createdModel.Id}" , createdModel);
         }
 
         [HttpPatch("models/{id}")]
         public async Task<ActionResult<VehicleModel>> UpdateVehicleModel(int id, [FromBody] JsonPatchDocument<VehicleModel> modelPatch)
         {
-            if (modelPatch == null) return BadRequest(ModelState);
+            if (modelPatch != null)
+            {
 
-            var updatedModel = (await _vehicleService.GetVehicleModel(id)).Value;
+                var targetModel = (await _vehicleService.GetVehicleModel(id)).Value;
 
-            modelPatch.ApplyTo(updatedModel);
+                if (targetModel == null) return NotFound();
 
-            await _vehicleService.UpdateVehicleModel(id, updatedModel);
+                modelPatch.ApplyTo(targetModel, ModelState);
 
-            return Json(updatedModel);
+                if (!ModelState.IsValid) return BadRequest(ModelState);
+
+                await _vehicleService.UpdateVehicleModel(id, targetModel);
+
+                return Json(targetModel);
+            }
+
+            return BadRequest(ModelState);
         }
 
         [HttpDelete("models/{id}")]
         public async Task<ActionResult<VehicleModel>> DeleteVehicleModel(int id)
         {
-            var deletedModel = (await _vehicleService.DeleteVehicleModel(id)).Value;
+            var targetModel = (await _vehicleService.DeleteVehicleModel(id)).Value;
 
-            return deletedModel;
+            if (targetModel == null) return NotFound();
+
+            return NoContent();
         }
     }
 }
