@@ -1,0 +1,12 @@
+﻿@model Project.MVC.Models.Shared.MenuViewModel
+
+<div style="min-width: 80%; border-top: 1px solid gray; border-bottom: 1px solid gray; padding: 2rem;">
+    <div class="row" style="min">
+        @foreach (var item in Model.MenuItems)
+        {
+            <div class="col-sm-6">
+                <partial name="_Card" model="item" />
+            </div>
+        }
+    </div>
+</div>

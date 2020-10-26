@@ -1,20 +1,37 @@
 ﻿using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Project.MVC.Models.Shared;
 using Project.Service.Models;
 using Project.Service.Services;
 
 namespace Project.MVC.Controllers
 {
-    [Route("api/[Controller]")]
+    [Route("[Controller]")]
     public class AdministrationController : Controller
     {
         private readonly IVehicleService _vehicleService;
+
         public AdministrationController(IVehicleService vehicleService)
         {
             _vehicleService = vehicleService;
+        }
+
+        public IActionResult Index()
+        {
+            var menu = new MenuViewModel
+            {
+                MenuItems = new List<CardViewModel>
+                {
+                    new CardViewModel { Title = "Manage vehicle makes", ImageUrl = "images/vehicleMake.png", Description = "CRUD vehicle makes", ControllerName = "administration", ControllerAction = "makes" },
+                    new CardViewModel { Title = "Manage vehicle models", ImageUrl = "images/vehicleModel.png", Description = "CRUD vehicle models", ControllerName = "administration", ControllerAction = "models" }
+                }
+            };
+            return View(menu);
         }
 
         [HttpGet("makes")]
@@ -39,7 +56,7 @@ namespace Project.MVC.Controllers
         {
             var createdMake = (await _vehicleService.CreateVehicleMake(newVehicleMake)).Value;
 
-            return Created($"/api/administration/makes/{createdMake.Id}", createdMake);
+            return Created($"/administration/makes/{createdMake.Id}", createdMake);
         }
 
         [HttpPatch("makes/{id}")]
@@ -97,7 +114,7 @@ namespace Project.MVC.Controllers
         {
             var createdModel = (await _vehicleService.CreateVehicleModel(newVehicleModel)).Value;
 
-            return Created($"/api/administration/models/{createdModel.Id}" , createdModel);
+            return Created($"/administration/models/{createdModel.Id}" , createdModel);
         }
 
         [HttpPatch("models/{id}")]
