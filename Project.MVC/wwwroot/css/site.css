@@ -62,34 +62,23 @@ body {
   /* Margin bottom by footer height */
 }
 .header {
-    padding: 1.2rem 0;
-    height: 90px;
+    height: 60px;
     display: flex;
+    align-items: center;
     justify-content: center;
 }
 
 .main {
-    min-height: calc(100vh - 152px);
+    min-height: calc(100vh - 122px);
 }
 
 .footer {
   height: 60px;
   display: flex;
+  align-items: center;
   justify-content: center;
 }
 
 .container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.card-img {
-    width: 100px;
-    height: 100px;
-}
-
-.card-btn{
-    text-transform: uppercase;
+    padding: 2rem;
 }

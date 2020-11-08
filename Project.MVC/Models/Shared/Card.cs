@@ -5,11 +5,10 @@ using System.Threading.Tasks;
 
 namespace Project.MVC.Models.Shared
 {
-    public class CardViewModel
+    public class Card
     {
         public string Title { get; set; }
         public string ImageUrl { get; set; }
-        public string Description { get; set; }
         public string ControllerName { get; set; }
         public string ControllerAction { get; set; }
     }

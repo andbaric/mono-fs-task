@@ -1,0 +1,16 @@
+﻿.menu {
+    min-width: 60%;
+    padding: 1rem;
+}
+
+.nav-tabs {
+    font-weight: 500;
+}
+
+.nav-tabs .nav-link.active {
+    color: #0366d6;
+}
+
+.nav-tabs .nav-link.inactive {
+    color: rgba(0, 0, 0, 0.7);
+}

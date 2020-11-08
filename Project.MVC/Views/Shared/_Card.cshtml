@@ -1,18 +1,15 @@
-﻿@model Project.MVC.Models.Shared.CardViewModel
-<div class="card text-center">
-  <div class="card-header">
-      <h4>
-          @Model.Title
-      </h4>
-   </div>
-  <div class="card-body">
-    <img class="card-img" src="@Model.ImageUrl" alt=""/>
-    <hr />
-    <p class="card-text">@Model.Description</p>
-    <a class="card-btn btn btn-primary"
-       asp-controller="@Model.ControllerName" 
-       asp-action="@Model.ControllerAction">
-        @Model.ControllerAction @Model.ControllerName 
-    </a>
-  </div>
-</div>
+﻿@model Project.MVC.Models.Shared.Card
+
+<a asp-controller="@Model.ControllerName"
+   asp-action="@Model.ControllerAction">
+
+    <div class="card card--activity text-center">
+        <div class="card-header">
+            <span>@Model.Title</span>
+        </div>
+        <div class="card-body">
+            <img class="card-img" src="@Model.ImageUrl" alt="" />
+        </div>
+    </div>
+
+</a>

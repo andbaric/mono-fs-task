@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.Reflection.Metadata.Ecma335;
+using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Project.MVC.Models.Shared;
 using Project.Service.Models;
 using Project.Service.Services;
+using Project.MVC.Models.Administration;
 
 namespace Project.MVC.Controllers
 {
@@ -21,26 +20,23 @@ namespace Project.MVC.Controllers
             _vehicleService = vehicleService;
         }
 
-        public IActionResult Index()
+        public IActionResult Administration()
         {
-            var menu = new MenuViewModel
-            {
-                MenuItems = new List<CardViewModel>
-                {
-                    new CardViewModel { Title = "Manage vehicle makes", ImageUrl = "images/vehicleMake.png", Description = "CRUD vehicle makes", ControllerName = "administration", ControllerAction = "makes" },
-                    new CardViewModel { Title = "Manage vehicle models", ImageUrl = "images/vehicleModel.png", Description = "CRUD vehicle models", ControllerName = "administration", ControllerAction = "models" }
-                }
-            };
-            return View(menu);
+            return View();
         }
 
         [HttpGet("makes")]
         [EnableQuery(AllowedOrderByProperties = "Name,Abrv")]
-        public async Task<ActionResult<IEnumerable<VehicleMake>>> GetVehicleMakes()
+        public async Task<ActionResult<IEnumerable<VehicleMake>>> AdministrateMakes()
         {
-            return await _vehicleService.GetVehicleMakes();
-        }
+            var vehicleMakes = (await _vehicleService.GetVehicleMakes()).Value;
+            var vehicleMakesData = vehicleMakes.AsQueryable();
 
+            var vehicleMakesAdministrationView = new MakesAdministrationViewModel(vehicleMakesData);
+
+            return View(vehicleMakesAdministrationView);
+        }
+        
         [HttpGet("makes/{id}")]
         public async Task<ActionResult<IEnumerable<VehicleMake>>> GetVehicleMake(int id)
         {
@@ -94,9 +90,14 @@ namespace Project.MVC.Controllers
 
         [HttpGet("models")]
         [EnableQuery(AllowedOrderByProperties = "Name,Abrv")]
-        public async Task<ActionResult<IEnumerable<VehicleModel>>> GetVehicleModels()
+        public async Task<ActionResult<IEnumerable<VehicleModel>>> AdministrateModels()
         {
-            return await _vehicleService.GetVehicleModels();
+            var vehicleModels = (await _vehicleService.GetVehicleModels()).Value;
+            var vehicleModelsData = vehicleModels.AsQueryable();
+
+            var vehicleModelsAdministrationView = new ModelsAdministrationViewModel(vehicleModelsData);
+
+            return View(vehicleModelsAdministrationView);
         }
 
         [HttpGet("models/{id}")]
