@@ -1,8 +1,35 @@
 ﻿@{
-    ViewData["Title"] = "Administration";
+    ViewData["Title"] = "Vehicles administration";
 }
-<div style="height: 100%; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+@using Project.MVC.Models.Administration;
+@model AdministrationViewModel
 
-    <h1> Welcome to administration! </h1>
+<div class="card text-center">
+    <div class="card-header">
+        <partial name="_Navigation" model="Model.AdministrationNavigation" />
+    </div>
+    <div class="card-body">
 
+        @(Html
+                .Grid(Model.Data)
+                .Build(columns =>
+                {
+                    columns.Add().RenderedAs((model, row) => row + 1).Titled("#").Css("text-center");
+                    columns.Add(model => model.MakeName).Titled("Make name");
+                    columns.Add(model => model.MakeAbrv).Titled("Make abrv");
+                    columns.Add(model => model.ModelName).Titled("Model name");
+                    columns.Add(model => model.ModelAbrv).Titled("Model abrv");
+
+                })
+                .Using(GridFilterMode.Header)
+                .Empty("No data found")
+                .Filterable()
+                .Sortable()
+                .Pageable(pager =>
+                {
+                    pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 5, "5" }, { 15, "15" } };
+                    pager.ShowPageSizes = true;
+                })
+            )
+    </div>
 </div>

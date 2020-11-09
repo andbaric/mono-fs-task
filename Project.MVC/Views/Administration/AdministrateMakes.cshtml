@@ -6,7 +6,7 @@
 
 <div class="card text-center">
     <div class="card-header">
-        <partial name="_Navigation" model="Model.AdministrationNav" />
+        <partial name="_Navigation" model="Model.AdministrationNavigation" />
     </div>
     <div class="card-body">
 
@@ -14,6 +14,7 @@
                 .Grid(Model.Data)
                 .Build(columns =>
                 {
+                    columns.Add().RenderedAs((model, row) => row + 1).Titled("#").Css("text-center");
                     columns.Add(model => model.Name).Titled("Name");
                     columns.Add(model => model.Abrv).Titled("Abrv");
 

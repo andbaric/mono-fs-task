@@ -4,9 +4,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Project.MVC.Models;
+using Project.MVC.Models.Administration;
+using Project.MVC.Models.Shared.Navigation;
 using Project.Service.Models;
 using Project.Service.Services;
-using Project.MVC.Models.Administration;
 
 namespace Project.MVC.Controllers
 {
@@ -20,9 +22,23 @@ namespace Project.MVC.Controllers
             _vehicleService = vehicleService;
         }
 
-        public IActionResult Administration()
+        [HttpGet]
+        public async Task<IActionResult> Administration()
         {
-            return View();
+            var vehicleMakes = (await _vehicleService.GetVehicleMakes()).Value;
+            var vehicleModels = (await _vehicleService.GetVehicleModels()).Value;
+            var vehiclesData = from make in vehicleMakes
+                               join model in vehicleModels on make.Id equals model.MakeId
+                               select new Vehicle
+                               {
+                                   MakeName = make.Name,
+                                   MakeAbrv= make.Abrv,
+                                   ModelName = model.Name,
+                                   ModelAbrv = model.Abrv
+                               };
+            var vehiclesAdministrationView = new AdministrationViewModel(vehiclesData);
+
+            return View(vehiclesAdministrationView);
         }
 
         [HttpGet("makes")]

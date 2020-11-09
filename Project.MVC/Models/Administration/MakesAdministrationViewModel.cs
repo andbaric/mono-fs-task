@@ -1,4 +1,6 @@
 ﻿using Project.MVC.Models.Shared;
+using Project.MVC.Models.Shared.Enums;
+using Project.MVC.Models.Shared.Navigation;
 using Project.Service.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,17 +11,11 @@ namespace Project.MVC.Models.Administration
     {
         public MakesAdministrationViewModel(IQueryable<VehicleMake> data)
         {
-            AdministrationNav = new Navigation(
-                new List<NavLink>
-                {
-                    new NavLink { Activity = Enums.ActivityState.active, Text = "Makes administration", Icon = "industry", ControllerName = "administration", ControllerAction = "makes" },
-                    new NavLink { Text = "Models administration", Icon = "car", ControllerName = "administration", ControllerAction = "models" }
-                }
-            ); ;
+            AdministrationNavigation = new Navigation(AdministrationLink.Makes);
             Data = data;
         }
 
-        public Navigation AdministrationNav { get; set; }
+        public Navigation AdministrationNavigation { get; set; }
         public IQueryable<VehicleMake> Data { get; }
     }
 }

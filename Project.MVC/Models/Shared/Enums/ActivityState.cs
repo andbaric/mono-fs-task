@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Project.MVC.Models.Enums
+namespace Project.MVC.Models.Shared.Enums
 {
     public enum ActivityState
     {
         active,
-        inactive
+        inactive,
     }
 }

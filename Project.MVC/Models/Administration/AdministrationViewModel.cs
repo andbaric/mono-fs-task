@@ -1,22 +1,18 @@
-﻿using Project.Service.Models;
-using System;
-using System.Collections;
+﻿using Project.MVC.Models.Shared.Enums;
+using Project.MVC.Models.Shared.Navigation;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 
 namespace Project.MVC.Models.Administration
 {
     public class AdministrationViewModel
     {
-        public AdministrationViewModel(IEnumerable<object> data)
+        public AdministrationViewModel(IEnumerable<Vehicle> data)
         {
-            Type objectType = data.GetType().GetGenericArguments().Single();
-            DataAttributes = objectType.GetProperties();
+            AdministrationNavigation = new Navigation(AdministrationLink.Vehicles);
             Data = data;
         }
 
-        public PropertyInfo[] DataAttributes { get; }
-        public IEnumerable<object> Data { get; }
+        public Navigation AdministrationNavigation { get; set; }
+        public IEnumerable<Vehicle> Data { get; }
     }
 }
