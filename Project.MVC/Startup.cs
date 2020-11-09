@@ -1,4 +1,3 @@
-using AutoMapper;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Project.Service.Models;
 using Project.Service.Services;
-using System.Reflection;
 
 namespace Project.MVC
 {
@@ -23,7 +21,6 @@ namespace Project.MVC
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddScoped<IVehicleService, VehicleService>();
             services.AddDbContext<VehicleDbContext>(options =>
             {

@@ -1,0 +1,34 @@
+﻿@{
+    ViewData["Title"] = "Vehicles administration";
+}
+@using Project.MVC.Models.Administration;
+@model AdministrationViewModel
+
+<div class="card text-center">
+    <div class="card-header">
+        <partial name="_Navigation" model="Model.AdministrationNavigation" />
+    </div>
+    <div class="card-body">
+        @(Html
+                .Grid(Model.Data)
+                .Build(columns =>
+                {
+                    columns.Add().RenderedAs((model, row) => row + 1).Titled("#").Css("text-center");
+                    columns.Add(model => model.MakeName).Titled("Make name");
+                    columns.Add(model => model.MakeAbrv).Titled("Make abrv");
+                    columns.Add(model => model.ModelName).Titled("Model name");
+                    columns.Add(model => model.ModelAbrv).Titled("Model abrv");
+
+                })
+                .Using(GridFilterMode.Header)
+                .Empty("No data found")
+                .Filterable()
+                .Sortable()
+                .Pageable(pager =>
+                {
+                    pager.PageSizes = new Dictionary<Int32, String> { { 4, "4" }, { 8, "8" }, { 16, "16" }, { 0, "All" } };
+                    pager.ShowPageSizes = true;
+                })
+            )
+    </div>
+</div>

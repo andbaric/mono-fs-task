@@ -1,17 +1,18 @@
 ﻿using System.Collections.Generic;
-using System.Reflection.Metadata.Ecma335;
+using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Project.MVC.Models.Shared;
+using Project.MVC.Models;
+using Project.MVC.Models.Administration;
+using Project.MVC.Models.Shared.Navigation;
 using Project.Service.Models;
 using Project.Service.Services;
 
 namespace Project.MVC.Controllers
 {
-    [Route("[Controller]")]
+    [Route("administration")]
     public class AdministrationController : Controller
     {
         private readonly IVehicleService _vehicleService;
@@ -21,34 +22,51 @@ namespace Project.MVC.Controllers
             _vehicleService = vehicleService;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> AdministrateVehicles()
         {
-            var menu = new MenuViewModel
-            {
-                MenuItems = new List<CardViewModel>
-                {
-                    new CardViewModel { Title = "Manage vehicle makes", ImageUrl = "images/vehicleMake.png", Description = "CRUD vehicle makes", ControllerName = "administration", ControllerAction = "makes" },
-                    new CardViewModel { Title = "Manage vehicle models", ImageUrl = "images/vehicleModel.png", Description = "CRUD vehicle models", ControllerName = "administration", ControllerAction = "models" }
-                }
-            };
-            return View(menu);
+            var vehicleMakes = (await _vehicleService.GetVehicleMakes()).Value;
+            var vehicleModels = (await _vehicleService.GetVehicleModels()).Value;
+            var vehiclesData = from make in vehicleMakes
+                               join model in vehicleModels on make.Id equals model.MakeId
+                               select new Vehicle
+                               {
+                                   MakeName = make.Name,
+                                   MakeAbrv= make.Abrv,
+                                   ModelName = model.Name,
+                                   ModelAbrv = model.Abrv
+                               };
+            var vehiclesAdministrationView = new AdministrationViewModel(vehiclesData);
+
+            return View(vehiclesAdministrationView);
         }
 
+        [Route("makes/create")]
+        public IActionResult CreateVehicleMake()
+        {
+            return View();
+        }
+        
         [HttpGet("makes")]
         [EnableQuery(AllowedOrderByProperties = "Name,Abrv")]
-        public async Task<ActionResult<IEnumerable<VehicleMake>>> GetVehicleMakes()
+        public async Task<ActionResult<IEnumerable<VehicleMake>>> AdministrateMakes()
         {
-            return await _vehicleService.GetVehicleMakes();
-        }
+            var vehicleMakes = (await _vehicleService.GetVehicleMakes()).Value;
+            var vehicleMakesData = vehicleMakes.AsQueryable();
 
-        [HttpGet("makes/{id}")]
-        public async Task<ActionResult<IEnumerable<VehicleMake>>> GetVehicleMake(int id)
+            var vehicleMakesAdministrationView = new MakesAdministrationViewModel(vehicleMakesData);
+
+            return View(vehicleMakesAdministrationView);
+        }
+        
+        [HttpGet("makes/edit/{id}")]
+        public async Task<ActionResult<IEnumerable<VehicleMake>>> EditVehicleMake(int id)
         {
             var vehicleMakeGetResult = (await _vehicleService.GetVehicleMake(id)).Value;
 
             if (vehicleMakeGetResult == null) return NotFound();
 
-            return Json(vehicleMakeGetResult);
+            return View(vehicleMakeGetResult);
         }
 
         [HttpPost("makes")]
@@ -94,19 +112,30 @@ namespace Project.MVC.Controllers
 
         [HttpGet("models")]
         [EnableQuery(AllowedOrderByProperties = "Name,Abrv")]
-        public async Task<ActionResult<IEnumerable<VehicleModel>>> GetVehicleModels()
+        public async Task<ActionResult<IEnumerable<VehicleModel>>> AdministrateModels()
         {
-            return await _vehicleService.GetVehicleModels();
+            var vehicleModels = (await _vehicleService.GetVehicleModels()).Value;
+            var vehicleModelsData = vehicleModels.AsQueryable();
+
+            var vehicleModelsAdministrationView = new ModelsAdministrationViewModel(vehicleModelsData);
+
+            return View(vehicleModelsAdministrationView);
         }
 
-        [HttpGet("models/{id}")]
-        public async Task<ActionResult<IEnumerable<VehicleModel>>> GetVehicleModel(int id)
+        [Route("models/create")]
+        public IActionResult CreateVehicleModel()
+        {
+            return View();
+        }
+
+        [HttpGet("models/edit/{id}")]
+        public async Task<ActionResult<IEnumerable<VehicleModel>>> EditVehicleModel(int id)
         {
             var vehicleMakeGetResult = (await _vehicleService.GetVehicleModel(id)).Value;
 
             if (vehicleMakeGetResult == null) return NotFound();
 
-            return Json(vehicleMakeGetResult);
+            return View(vehicleMakeGetResult);
         }
 
         [HttpPost("models")]
