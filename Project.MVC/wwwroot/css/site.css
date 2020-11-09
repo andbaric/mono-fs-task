@@ -82,3 +82,7 @@ body {
 .container {
     padding: 2rem;
 }
+
+.row {
+    justify-content: center;
+}

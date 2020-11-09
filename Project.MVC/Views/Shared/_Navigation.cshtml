@@ -1,18 +1,13 @@
-﻿@using Project.MVC.Models.Shared.Enums;
-
-<ul class="nav nav-tabs card-header-tabs">
+﻿<ul class="nav nav-tabs card-header-tabs">
     @foreach (var link in Model.Links)
     {
         <li class="nav-item">
-       
             <a asp-controller="@link.ControllerName"
                asp-action="@link.ControllerAction"
                class="nav-link @link.Activity">
-
                 <i class="fas fa-@link.Icon"></i>
                 <span>@link.Text</span>
             </a>
-
         </li>
      }
 </ul>

@@ -12,7 +12,7 @@ using Project.Service.Services;
 
 namespace Project.MVC.Controllers
 {
-    [Route("[Controller]")]
+    [Route("administration")]
     public class AdministrationController : Controller
     {
         private readonly IVehicleService _vehicleService;
@@ -23,7 +23,7 @@ namespace Project.MVC.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Administration()
+        public async Task<IActionResult> AdministrateVehicles()
         {
             var vehicleMakes = (await _vehicleService.GetVehicleMakes()).Value;
             var vehicleModels = (await _vehicleService.GetVehicleModels()).Value;
@@ -41,6 +41,12 @@ namespace Project.MVC.Controllers
             return View(vehiclesAdministrationView);
         }
 
+        [Route("makes/create")]
+        public IActionResult CreateVehicleMake()
+        {
+            return View();
+        }
+        
         [HttpGet("makes")]
         [EnableQuery(AllowedOrderByProperties = "Name,Abrv")]
         public async Task<ActionResult<IEnumerable<VehicleMake>>> AdministrateMakes()
@@ -53,14 +59,14 @@ namespace Project.MVC.Controllers
             return View(vehicleMakesAdministrationView);
         }
         
-        [HttpGet("makes/{id}")]
-        public async Task<ActionResult<IEnumerable<VehicleMake>>> GetVehicleMake(int id)
+        [HttpGet("makes/edit/{id}")]
+        public async Task<ActionResult<IEnumerable<VehicleMake>>> EditVehicleMake(int id)
         {
             var vehicleMakeGetResult = (await _vehicleService.GetVehicleMake(id)).Value;
 
             if (vehicleMakeGetResult == null) return NotFound();
 
-            return Json(vehicleMakeGetResult);
+            return View(vehicleMakeGetResult);
         }
 
         [HttpPost("makes")]
@@ -116,14 +122,20 @@ namespace Project.MVC.Controllers
             return View(vehicleModelsAdministrationView);
         }
 
-        [HttpGet("models/{id}")]
-        public async Task<ActionResult<IEnumerable<VehicleModel>>> GetVehicleModel(int id)
+        [Route("models/create")]
+        public IActionResult CreateVehicleModel()
+        {
+            return View();
+        }
+
+        [HttpGet("models/edit/{id}")]
+        public async Task<ActionResult<IEnumerable<VehicleModel>>> EditVehicleModel(int id)
         {
             var vehicleMakeGetResult = (await _vehicleService.GetVehicleModel(id)).Value;
 
             if (vehicleMakeGetResult == null) return NotFound();
 
-            return Json(vehicleMakeGetResult);
+            return View(vehicleMakeGetResult);
         }
 
         [HttpPost("models")]

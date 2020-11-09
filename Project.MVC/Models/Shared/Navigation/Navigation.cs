@@ -14,7 +14,7 @@ namespace Project.MVC.Models.Shared.Navigation
 
         public IEnumerable<NavigationLink> Links { get; set; }
 
-        static private IEnumerable<NavigationLink> CreateAdministrationLinks(AdministrationLink activeLink)
+        private IEnumerable<NavigationLink> CreateAdministrationLinks(AdministrationLink activeLink)
         {
             var rootRoute = "administration";
             var administrationLinks = new List<NavigationLink>
@@ -24,21 +24,21 @@ namespace Project.MVC.Models.Shared.Navigation
                     Text = $"Vehicles {rootRoute}", 
                     Icon = "car", 
                     ControllerName = rootRoute, 
-                    ControllerAction = "" 
+                    ControllerAction = "AdministrateVehicles" 
                 },
                 new NavigationLink { 
                     Activity = activeLink == AdministrationLink.Makes ? ActivityState.active : ActivityState.inactive,
                     Text = $"Makes {rootRoute}", 
                     Icon = "industry", 
                     ControllerName = rootRoute, 
-                    ControllerAction = "makes" 
+                    ControllerAction = "AdministrateMakes" 
                 },
                 new NavigationLink {
                     Activity = activeLink == AdministrationLink.Models ? ActivityState.active : ActivityState.inactive,
                     Text = $"Models {rootRoute}", 
                     Icon = "car-side", 
                     ControllerName = rootRoute, 
-                    ControllerAction = "models" 
+                    ControllerAction = "AdministrateModels"
                 }
             };
             return administrationLinks;
