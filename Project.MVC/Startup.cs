@@ -1,4 +1,4 @@
-using Microsoft.AspNet.OData.Extensions;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Project.Service.Models;
 using Project.Service.Services;
+using System;
 
 namespace Project.MVC
 {
@@ -29,7 +30,7 @@ namespace Project.MVC
             services
                 .AddControllersWithViews()
                 .AddNewtonsoftJson();
-            services.AddOData();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -59,8 +60,6 @@ namespace Project.MVC
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.EnableDependencyInjection();
-                endpoints.OrderBy().Filter();
             });
         }
     }

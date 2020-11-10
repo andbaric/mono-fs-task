@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNet.OData;
+using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Project.MVC.Models;
 using Project.MVC.Models.Administration;
-using Project.MVC.Models.Shared.Navigation;
+using Project.MVC.Models.Administration.VehicleMake;
+using Project.MVC.Models.Administration.VehicleModel;
 using Project.Service.Models;
 using Project.Service.Services;
 
@@ -16,20 +17,22 @@ namespace Project.MVC.Controllers
     public class AdministrationController : Controller
     {
         private readonly IVehicleService _vehicleService;
+        private readonly IMapper _mapper;
 
-        public AdministrationController(IVehicleService vehicleService)
+        public AdministrationController(IVehicleService vehicleService, IMapper mapper)
         {
             _vehicleService = vehicleService;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<IActionResult> AdministrateVehicles()
+        public async Task<ActionResult> AdministrateVehicles()
         {
             var vehicleMakes = (await _vehicleService.GetVehicleMakes()).Value;
             var vehicleModels = (await _vehicleService.GetVehicleModels()).Value;
             var vehiclesData = from make in vehicleMakes
                                join model in vehicleModels on make.Id equals model.MakeId
-                               select new Vehicle
+                               select new VehicleViewModel
                                {
                                    MakeName = make.Name,
                                    MakeAbrv= make.Abrv,
@@ -38,27 +41,33 @@ namespace Project.MVC.Controllers
                                };
             var vehiclesAdministrationView = new AdministrationViewModel(vehiclesData);
 
-            return View(vehiclesAdministrationView);
+            return View("~/Views/AdministrateVehicles.cshtml", vehiclesAdministrationView);
         }
 
-        [Route("makes/create")]
-        public IActionResult CreateVehicleMake()
-        {
-            return View();
-        }
-        
         [HttpGet("makes")]
-        [EnableQuery(AllowedOrderByProperties = "Name,Abrv")]
         public async Task<ActionResult<IEnumerable<VehicleMake>>> AdministrateMakes()
         {
             var vehicleMakes = (await _vehicleService.GetVehicleMakes()).Value;
-            var vehicleMakesData = vehicleMakes.AsQueryable();
+            var mappedEntityToTableDataView = _mapper.Map<IEnumerable<MakeTableDataViewModel>>(vehicleMakes);
+            var vehicleMakesAdministrationView = new AdministrateMakesViewModel(mappedEntityToTableDataView);
 
-            var vehicleMakesAdministrationView = new MakesAdministrationViewModel(vehicleMakesData);
-
-            return View(vehicleMakesAdministrationView);
+            return View("~/Views/Administration/VehicleMake/AdministrateMakesView.cshtml", vehicleMakesAdministrationView);
         }
-        
+
+        [Route("makes/create")]
+        public async Task<ActionResult> CreateVehicleMakeView()
+        {
+            return View("~/Views/Administration/VehicleMake/CreateMakeView.cshtml");
+        }
+
+        [HttpPost("makes/create")]
+        public async Task<ActionResult<VehicleMake>> CreateVehicleMake([FromBody] VehicleMake newVehicleMake)
+        {
+            var createdMake = (await _vehicleService.CreateVehicleMake(newVehicleMake)).Value;
+
+            return Created($"/administration/makes/{createdMake.Id}", createdMake);
+        }
+
         [HttpGet("makes/edit/{id}")]
         public async Task<ActionResult<IEnumerable<VehicleMake>>> EditVehicleMake(int id)
         {
@@ -69,13 +78,6 @@ namespace Project.MVC.Controllers
             return View(vehicleMakeGetResult);
         }
 
-        [HttpPost("makes")]
-        public async Task<ActionResult<VehicleMake>> CreateVehicleMake([FromBody] VehicleMake newVehicleMake)
-        {
-            var createdMake = (await _vehicleService.CreateVehicleMake(newVehicleMake)).Value;
-
-            return Created($"/administration/makes/{createdMake.Id}", createdMake);
-        }
 
         [HttpPatch("makes/{id}")]
         public async Task<ActionResult<VehicleMake>> UpdateVehicleMake(int id, [FromBody] JsonPatchDocument<VehicleMake> makePatch)
@@ -111,21 +113,32 @@ namespace Project.MVC.Controllers
 
 
         [HttpGet("models")]
-        [EnableQuery(AllowedOrderByProperties = "Name,Abrv")]
-        public async Task<ActionResult<IEnumerable<VehicleModel>>> AdministrateModels()
+        public async Task<IActionResult> AdministrateModels()
         {
+            var vehicleMakes = (await _vehicleService.GetVehicleMakes()).Value;
             var vehicleModels = (await _vehicleService.GetVehicleModels()).Value;
-            var vehicleModelsData = vehicleModels.AsQueryable();
+            var vehiclesModelsTableData = from make in vehicleMakes
+                                        join model in vehicleModels on make.Id equals model.MakeId
+                                        select new ModelTableDataViewModel
+                                        {
+                                            ModelId = model.Id,
+                                            MakeAbrv = make.Abrv,
+                                            ModelName = model.Name,
+                                            ModelAbrv = model.Abrv
+                                        };
+            var vehicleModelsAdministrationView = new AdministrateModelsViewModel(vehiclesModelsTableData);
 
-            var vehicleModelsAdministrationView = new ModelsAdministrationViewModel(vehicleModelsData);
-
-            return View(vehicleModelsAdministrationView);
+            return View("~/Views/Administration/VehicleModel/AdministrateModelsView.cshtml",vehicleModelsAdministrationView);
         }
 
         [Route("models/create")]
-        public IActionResult CreateVehicleModel()
+        public async Task<ActionResult> CreateVehicleModel()
         {
-            return View();
+            var vehicleMakes = (await _vehicleService.GetVehicleMakes()).Value;
+            var availableVehicleMakes = vehicleMakes.Select(name => name.Name).ToList();
+            var createModelView = new CreateModelViewModel(availableVehicleMakes);
+
+            return View("~/Views/Administration/VehicleModel/CreateModelView.cshtml", createModelView);
         }
 
         [HttpGet("models/edit/{id}")]
@@ -147,7 +160,7 @@ namespace Project.MVC.Controllers
         }
 
         [HttpPatch("models/{id}")]
-        public async Task<ActionResult<VehicleModel>> UpdateVehicleModel(int id, [FromBody] JsonPatchDocument<VehicleModel> modelPatch)
+        public async Task<ActionResult<VehicleModel>> UpdateVehicleModel(int id, [FromBody] JsonPatchDocument<Service.Models.VehicleModel> modelPatch)
         {
             if (modelPatch != null)
             {
@@ -169,7 +182,7 @@ namespace Project.MVC.Controllers
         }
 
         [HttpDelete("models/{id}")]
-        public async Task<ActionResult<VehicleModel>> DeleteVehicleModel(int id)
+        public async Task<ActionResult<Service.Models.VehicleModel>> DeleteVehicleModel(int id)
         {
             var targetModel = (await _vehicleService.DeleteVehicleModel(id)).Value;
 

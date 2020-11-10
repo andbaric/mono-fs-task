@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Project.MVC.Models
 {
-    public class Vehicle
+    public class VehicleViewModel
     {
         public string MakeName { get; set; }
         public string MakeAbrv { get; set; }

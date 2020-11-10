@@ -10,7 +10,7 @@
     </div>
     <div class="card-body">
         @(Html
-                .Grid(Model.Data)
+                .Grid(Model.TableData)
                 .Build(columns =>
                 {
                     columns.Add().RenderedAs((model, row) => row + 1).Titled("#").Css("text-center");
@@ -26,7 +26,7 @@
                 .Sortable()
                 .Pageable(pager =>
                 {
-                    pager.PageSizes = new Dictionary<Int32, String> { { 4, "4" }, { 8, "8" }, { 16, "16" }, { 0, "All" } };
+                    pager.PageSizes = new Dictionary<Int32, String> { { 7, "7" }, { 14, "14" }, { 0, "All" } };
                     pager.ShowPageSizes = true;
                 })
             )

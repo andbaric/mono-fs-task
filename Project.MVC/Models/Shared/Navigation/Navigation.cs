@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNet.OData.Builder;
-using Project.MVC.Models.Shared.Enums;
-using System;
+﻿using Project.MVC.Models.Shared.Enums;
 using System.Collections.Generic;
 
 namespace Project.MVC.Models.Shared.Navigation
@@ -21,7 +19,7 @@ namespace Project.MVC.Models.Shared.Navigation
             {
                 new NavigationLink {
                     Activity = activeLink == AdministrationLink.Vehicles ? ActivityState.active : ActivityState.inactive, 
-                    Text = $"Vehicles {rootRoute}", 
+                    Text = $"Vehicles preview",
                     Icon = "car", 
                     ControllerName = rootRoute, 
                     ControllerAction = "AdministrateVehicles" 
@@ -41,6 +39,7 @@ namespace Project.MVC.Models.Shared.Navigation
                     ControllerAction = "AdministrateModels"
                 }
             };
+
             return administrationLinks;
         }
     }

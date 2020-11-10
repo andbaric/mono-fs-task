@@ -1,15 +1,20 @@
-﻿@model Project.Service.Models.VehicleModel
-
+﻿@using Project.MVC.Models.Administration.VehicleModel;
+@model CreateModelViewModel;
 @{
     ViewData["Title"] = "Create vehicle model";
 }
 
-<h4>New vehicle model</h4>
+<h4>New model</h4>
+<i class='fas fa-car-side fa-5x'></i>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="CreateVehicleModelView">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group" style="display: flex; flex-direction: column;">
+                <label asp-for="AvailableMakesNames" class="control-label">Make</label>
+                @Html.DropDownListFor(m => m.AvailableMakesNames, new SelectList(Model.AvailableMakesNames))
+            </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -19,16 +24,6 @@
                 <label asp-for="Abrv" class="control-label"></label>
                 <input asp-for="Abrv" class="form-control" />
                 <span asp-validation-for="Abrv" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MakeId" class="control-label"></label>
-                <input asp-for="MakeId" class="form-control" />
-                <span asp-validation-for="MakeId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" />
-                <span asp-validation-for="Id" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

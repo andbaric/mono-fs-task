@@ -1,33 +1,35 @@
 ﻿@{
     ViewData["Title"] = "Models administration";
 }
-@using Project.MVC.Models.Administration;
-@model ModelsAdministrationViewModel
+@using Project.MVC.Models.Administration.VehicleModel;
+@model AdministrateModelsViewModel
 
 <div class="card text-center">
     <div class="card-header">
-        <partial name="_Navigation" model="Model.AdministrationNavigation" />
+        <partial name="_Navigation" model="Model.ModelsAdministrationNavigation" />
     </div>
     <div class="card-body">
-        <p style="text-align: left;">
+        <p>
             <a asp-controller="administration" asp-action="CreateVehicleModel" class="btn btn-primary">
                 <i class='fas fa-plus'></i>
                 New model
             </a>
         </p>
         @(Html
-                .Grid(Model.Data)
+                .Grid(Model.TableData)
                 .Build(columns =>
                 {
                     columns.Add().RenderedAs((model, row) => row + 1).Titled("#").Css("text-center");
-                    columns.Add(model => model.Name).Titled("Name");
-                    columns.Add(model => model.Abrv).Titled("Abrv");
+                    columns.Add(model => model.ModelName).Titled("Make name");
+                    columns.Add(model => model.MakeAbrv).Titled("Make abrv");
+                    columns.Add(model => model.ModelName).Titled("Model name");
+                    columns.Add(model => model.ModelAbrv).Titled("Model abrv");
                     columns.Add(model =>
                        $"<div>" +
-                       $"<a href= \"/administration/models/edit/{model.Id}\"" + 
-                           $"style ='margin: 2px' class='btn btn-secondary' data-id=\"{model.Name}\"><i class='fas fa-edit'></i></a>" +
+                       $"<a href= \"/administration/models/edit/{model.ModelId}\"" + 
+                           $"style ='margin: 2px' class='btn btn-secondary' data-id=\"{model.ModelName}\"><i class='fas fa-edit'></i></a>" +
                        $"<button " +
-                           $"style ='margin: 2px' class='btn btn-danger' data-id=\"{model.Name}\"><i class='fas fa-trash'></i></button>" +
+                           $"style ='margin: 2px' class='btn btn-danger' data-id=\"{model.ModelName}\"><i class='fas fa-trash'></i></button>" +
                        $"<div>"
                    ).Encoded(false).Titled("CRUD options");
 
