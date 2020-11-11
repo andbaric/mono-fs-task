@@ -1,0 +1,17 @@
+﻿@using Project.MVC.Models.Shared.Enums;
+@if (!String.IsNullOrEmpty(Model.MessageText))
+{
+    switch (Model.MessageType)
+    {
+        case FeedbackMessageType.Sucess:
+            <div class="alert alert-success" role="alert">
+                @Model.MessageText
+            </div>
+            break;
+        case FeedbackMessageType.Failed:
+            <div class="alert alert-danger" role="alert">
+                @Model.MessageText
+            </div>
+            break;
+    }
+}

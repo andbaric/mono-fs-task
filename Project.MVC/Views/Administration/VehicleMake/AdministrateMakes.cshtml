@@ -10,7 +10,7 @@
     </div>
     <div class="card-body">
         <p>
-            <a asp-action="CreateVehicleMakeView" class="btn btn-primary">
+            <a asp-action="CreateMake" class="btn btn-primary">
                 <i class='fas fa-plus'></i>
                 New make
             </a>
@@ -24,10 +24,12 @@
                     columns.Add(model => model.Abrv).Titled("Abrv");
                     columns.Add(model =>
                        $"<div>" +
-                       $"<a href= \"/administration/makes/edit/{model.Abrv}\"" +
-                           $"style ='margin: 2px' class='btn btn-secondary' data-id=\"{model.Name}\"><i class='fas fa-edit'></i></a>" +
-                       $"<button " +
-                           $"style ='margin: 2px' class='btn btn-danger' data-id=\"{model.Name}\"><i class='fas fa-trash'></i></button>" +
+                       $"<a href= \"/administration/makes/{model.Id}\"" +
+                           $"style ='margin: 2px' class='btn btn-secondary' data-id=\"{model.Id}\"><i class='fas fa-info-circle'></i></button>" +
+                       $"<a href= \"/administration/makes/edit/{model.Id}\"" +
+                           $"style ='margin: 2px' class='btn btn-secondary' data-id=\"{model.Id}\"><i class='fas fa-edit'></i></a>" +
+                       $"<a href= \"/administration/makes/delete/{model.Id}\"" +
+                           $"style ='margin: 2px' class='btn btn-danger' data-id=\"{model.Id}\"><i class='fas fa-trash'></i></button>" +
                        $"<div>"
                    ).Encoded(false).Titled("CRUD options");
 

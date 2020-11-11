@@ -10,7 +10,7 @@
     </div>
     <div class="card-body">
         <p>
-            <a asp-controller="administration" asp-action="CreateVehicleModel" class="btn btn-primary">
+            <a asp-action="CreateModel" class="btn btn-primary">
                 <i class='fas fa-plus'></i>
                 New model
             </a>
@@ -26,10 +26,12 @@
                     columns.Add(model => model.ModelAbrv).Titled("Model abrv");
                     columns.Add(model =>
                        $"<div>" +
-                       $"<a href= \"/administration/models/edit/{model.ModelId}\"" + 
-                           $"style ='margin: 2px' class='btn btn-secondary' data-id=\"{model.ModelName}\"><i class='fas fa-edit'></i></a>" +
-                       $"<button " +
-                           $"style ='margin: 2px' class='btn btn-danger' data-id=\"{model.ModelName}\"><i class='fas fa-trash'></i></button>" +
+                       $"<a href= \"/administration/models/{model.ModelId}\"" +
+                           $"style ='margin: 2px' class='btn btn-secondary' data-id=\"{model.ModelId}\"><i class='fas fa-info-circle'></i></button>" +
+                       $"<a href= \"/administration/models/edit/{model.ModelId}\"" +
+                           $"style ='margin: 2px' class='btn btn-secondary' data-id=\"{model.ModelId}\"><i class='fas fa-edit'></i></a>" +
+                       $"<a href= \"/administration/models/delete/{model.ModelId}\"" +
+                           $"style ='margin: 2px' class='btn btn-danger' data-id=\"{model.ModelId}\"><i class='fas fa-trash'></i></button>" +
                        $"<div>"
                    ).Encoded(false).Titled("CRUD options");
 

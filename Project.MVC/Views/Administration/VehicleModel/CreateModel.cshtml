@@ -1,17 +1,21 @@
-﻿@using Project.MVC.Models.Administration.VehicleMake;
-@model CreateMakeViewModel
-
+﻿@using Project.MVC.Models.Administration.VehicleModel;
+@model CreateModelViewModel;
 @{
-    ViewData["Title"] = "Create vehicle make";
+    ViewData["Title"] = "Create vehicle model";
 }
 
-<h4>New make</h4>
-<i class='fas fa-industry fa-5x'></i>
+<h4>New model</h4>
+<i class='fas fa-car-side fa-5x'></i>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="CreateVehicleMakeView">
+        <partial name="_FeedbackMessage" model="Model" />
+        <form asp-action="CreateVehicleModel" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group" style="display: flex; flex-direction: column;">
+                <label asp-for="MakeId" class="control-label">Make</label>
+                @Html.DropDownListFor(m => m.MakeId, (SelectList)ViewBag.AvailableMakes)
+            </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -23,14 +27,13 @@
                 <span asp-validation-for="Abrv" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create make" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
-        <hr />
     </div>
 </div>
 
 <div>
-    <a asp-action="AdministrateMakes">Back to List</a>
+    <a asp-action="AdministrateModels">Back to List</a>
 </div>
 

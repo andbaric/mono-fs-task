@@ -1,15 +1,14 @@
-﻿using System;
+﻿using Project.MVC.Models.Shared;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Project.MVC.Models.Administration.VehicleMake
 {
-    public class CreateMakeViewModel
+    public class CreateMakeViewModel : FeedbackMessageBase
     {
-        public List<string> AvailableMakes { get; set; }
         public string Name { get; set; }
         public string Abrv { get; set; }
-        public string FeedBackMessage { get; set; }
     }
 }
