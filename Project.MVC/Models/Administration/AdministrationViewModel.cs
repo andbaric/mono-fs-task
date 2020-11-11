@@ -6,13 +6,13 @@ namespace Project.MVC.Models.Administration
 {
     public class AdministrationViewModel
     {
-        public AdministrationViewModel(IEnumerable<Vehicle> data)
+        public AdministrationViewModel(IEnumerable<VehicleViewModel> tableData)
         {
             AdministrationNavigation = new Navigation(AdministrationLink.Vehicles);
-            Data = data;
+            TableData = tableData;
         }
 
         public Navigation AdministrationNavigation { get; set; }
-        public IEnumerable<Vehicle> Data { get; }
+        public IEnumerable<VehicleViewModel> TableData { get; }
     }
 }

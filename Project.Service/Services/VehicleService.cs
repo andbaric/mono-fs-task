@@ -40,7 +40,6 @@ namespace Project.Service.Services
             if (targetMake != null)
             {
                 _context.VehicleMakes.Remove(targetMake);
-
                 await _context.SaveChangesAsync();
             }
 
@@ -54,7 +53,6 @@ namespace Project.Service.Services
             if (targetModel != null)
             {
                 _context.VehicleModels.Remove(targetModel);
-
                 await _context.SaveChangesAsync();
             }
             
@@ -103,9 +101,7 @@ namespace Project.Service.Services
         public async Task<ActionResult<VehicleMake>> UpdateVehicleMake(int id, VehicleMake updatedVehicleMake)
         {
             var existingMake = (await GetVehicleMake(id)).Value;
-
             _context.Entry(existingMake).CurrentValues.SetValues(updatedVehicleMake);
-
             await _context.SaveChangesAsync();
 
             return existingMake;
@@ -114,9 +110,7 @@ namespace Project.Service.Services
         public async Task<ActionResult<VehicleModel>> UpdateVehicleModel(int id, VehicleModel updatedVehicleModel)
         {
             var existingModel = (await GetVehicleModel(id)).Value;
-
             _context.Entry(existingModel).CurrentValues.SetValues(updatedVehicleModel);
-
             await _context.SaveChangesAsync();
 
             return existingModel;

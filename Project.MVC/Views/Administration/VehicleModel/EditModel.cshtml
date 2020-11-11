@@ -1,14 +1,16 @@
 ﻿@model Project.Service.Models.VehicleModel
 
 @{
-    ViewData["Title"] = "Create vehicle model";
+    ViewData["Title"] = "EditModel";
 }
 
-<h4>New vehicle model</h4>
+<h1>EditModel</h1>
+
+<h4>VehicleModel</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="CreateVehicleModelView">
+        <form asp-action="EditModel">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
@@ -31,7 +33,7 @@
                 <span asp-validation-for="Id" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -41,3 +43,6 @@
     <a asp-action="AdministrateModels">Back to List</a>
 </div>
 
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

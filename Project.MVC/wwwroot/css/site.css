@@ -86,3 +86,7 @@ body {
 .row {
     justify-content: center;
 }
+
+label {
+    font-weight: 500;
+}

@@ -1,22 +1,22 @@
 ﻿@{
-    ViewData["Title"] = "Models administration";
+    ViewData["Title"] = "Makes administration";
 }
-@using Project.MVC.Models.Administration;
-@model ModelsAdministrationViewModel
+@using Project.MVC.Models.Administration.VehicleMake;
+@model AdministrateMakesViewModel
 
 <div class="card text-center">
     <div class="card-header">
-        <partial name="_Navigation" model="Model.AdministrationNavigation" />
+        <partial name="_Navigation" model="Model.MakesAdministrationNavigation" />
     </div>
     <div class="card-body">
-        <p style="text-align: left;">
-            <a asp-controller="administration" asp-action="CreateVehicleModel" class="btn btn-primary">
+        <p>
+            <a asp-action="CreateMake" class="btn btn-primary">
                 <i class='fas fa-plus'></i>
-                New model
+                New make
             </a>
         </p>
         @(Html
-                .Grid(Model.Data)
+                .Grid(Model.TableData)
                 .Build(columns =>
                 {
                     columns.Add().RenderedAs((model, row) => row + 1).Titled("#").Css("text-center");
@@ -24,10 +24,12 @@
                     columns.Add(model => model.Abrv).Titled("Abrv");
                     columns.Add(model =>
                        $"<div>" +
-                       $"<a href= \"/administration/models/edit/{model.Id}\"" + 
-                           $"style ='margin: 2px' class='btn btn-secondary' data-id=\"{model.Name}\"><i class='fas fa-edit'></i></a>" +
-                       $"<button " +
-                           $"style ='margin: 2px' class='btn btn-danger' data-id=\"{model.Name}\"><i class='fas fa-trash'></i></button>" +
+                       $"<a href= \"/administration/makes/{model.Id}\"" +
+                           $"style ='margin: 2px' class='btn btn-secondary' data-id=\"{model.Id}\"><i class='fas fa-info-circle'></i></button>" +
+                       $"<a href= \"/administration/makes/edit/{model.Id}\"" +
+                           $"style ='margin: 2px' class='btn btn-secondary' data-id=\"{model.Id}\"><i class='fas fa-edit'></i></a>" +
+                       $"<a href= \"/administration/makes/delete/{model.Id}\"" +
+                           $"style ='margin: 2px' class='btn btn-danger' data-id=\"{model.Id}\"><i class='fas fa-trash'></i></button>" +
                        $"<div>"
                    ).Encoded(false).Titled("CRUD options");
 
@@ -42,7 +44,5 @@
                     pager.ShowPageSizes = true;
                 })
             )
-
-
     </div>
 </div>
