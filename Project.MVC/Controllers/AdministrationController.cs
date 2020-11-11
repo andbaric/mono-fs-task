@@ -114,7 +114,7 @@ namespace Project.MVC.Controllers
             return View("~/Views/Administration/VehicleMake/EditMake.cshtml", vehicleMakeTarget);
         }
 
-        [HttpPost("makes/edit/{id}")]
+        [HttpPost("makes/edit")]
         public async Task<ActionResult> UpdateMake(VehicleMake updatedVehicleMake)
         {
             if (ModelState.IsValid)
