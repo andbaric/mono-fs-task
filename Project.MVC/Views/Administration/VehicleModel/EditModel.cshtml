@@ -10,8 +10,12 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="EditModel">
+        <form asp-action="UpdateModel">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group" style="display: flex; flex-direction: column;">
+                <label asp-for="MakeId" class="control-label">Make affiliation</label>
+                @Html.DropDownListFor(m => m.MakeId, (SelectList)ViewBag.AvailableMakes)
+            </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -22,16 +26,7 @@
                 <input asp-for="Abrv" class="form-control" />
                 <span asp-validation-for="Abrv" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="MakeId" class="control-label"></label>
-                <input asp-for="MakeId" class="form-control" />
-                <span asp-validation-for="MakeId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" />
-                <span asp-validation-for="Id" class="text-danger"></span>
-            </div>
+            @Html.HiddenFor(model => model.Id)
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

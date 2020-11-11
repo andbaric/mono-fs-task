@@ -10,7 +10,7 @@
     </div>
     <div class="card-body">
         <p>
-            <a asp-action="CreateModel" class="btn btn-primary">
+            <a asp-action="CreateModel" class="btn btn-primary  btn-lg btn-block">
                 <i class='fas fa-plus'></i>
                 New model
             </a>
@@ -33,7 +33,7 @@
                        $"<a href= \"/administration/models/delete/{model.ModelId}\"" +
                            $"style ='margin: 2px' class='btn btn-danger' data-id=\"{model.ModelId}\"><i class='fas fa-trash'></i></button>" +
                        $"<div>"
-                   ).Encoded(false).Titled("CRUD options");
+                   ).Encoded(false).Titled("CRUD options").Css("actions-column");
 
                 })
                 .Using(GridFilterMode.Header)

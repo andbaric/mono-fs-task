@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -48,6 +49,7 @@ namespace Project.MVC.Controllers
             return View("~/Views/Administration/AdministrateVehicles.cshtml", vehiclesAdministrationView);
         }
 
+        // READ MAKES
         [HttpGet("makes")]
         public async Task<ActionResult<IEnumerable<VehicleMake>>> AdministrateMakes()
         {
@@ -58,6 +60,16 @@ namespace Project.MVC.Controllers
             return View("~/Views/Administration/VehicleMake/AdministrateMakes.cshtml", vehicleMakesAdministrationView);
         }
 
+        [HttpGet("makes/{id}")]
+        public async Task<ActionResult> ReadMake(int id)
+        {
+            var vehicleMake = (await _vehicleService.GetVehicleMake(id)).Value;
+
+            return View("~/Views/Administration/VehicleMake/ReadMake.cshtml", vehicleMake);
+        }
+
+
+        //CREATE MAKE
         [Route("makes/create")]
         public IActionResult CreateMake(CreateMakeViewModel createMakeState)
         {
@@ -91,47 +103,32 @@ namespace Project.MVC.Controllers
             }
         }
 
-        [HttpGet("makes/{id}")]
-        public async Task<ActionResult> ReadMake(int id)
-        {
-            var vehicleMake = (await _vehicleService.GetVehicleMake(id)).Value;
-
-            return View("~/Views/Administration/VehicleMake/ReadMake.cshtml", vehicleMake);
-        }
-
+        // UPDATE MAKE
         [HttpGet("makes/edit/{id}")]
-        public async Task<ActionResult<IEnumerable<VehicleMake>>> EditMake(int id)
+        public async Task<ActionResult> EditMake(int id)
         {
-            var vehicleMakeGetResult = (await _vehicleService.GetVehicleMake(id)).Value;
+            var vehicleMakeTarget = (await _vehicleService.GetVehicleMake(id)).Value;
 
-            if (vehicleMakeGetResult == null) return NotFound();
+            if (vehicleMakeTarget == null) return NotFound();
 
-            return View("~/Views/Administration/VehicleMake/EditMake.cshtml", vehicleMakeGetResult);
+            return View("~/Views/Administration/VehicleMake/EditMake.cshtml", vehicleMakeTarget);
         }
 
-
-        [HttpPatch("makes/{id}")]
-        public async Task<ActionResult<VehicleMake>> UpdateMake(int id, [FromBody] JsonPatchDocument<VehicleMake> makePatch)
+        [HttpPost("makes/edit/{id}")]
+        public async Task<ActionResult> UpdateMake(VehicleMake updatedVehicleMake)
         {
-            if (makePatch != null)
+            if (ModelState.IsValid)
             {
-         
-                var targetMake = (await _vehicleService.GetVehicleMake(id)).Value;
+                await _vehicleService.UpdateVehicleMake(updatedVehicleMake.Id, updatedVehicleMake);
 
-                if (targetMake == null) return NotFound();
-
-                makePatch.ApplyTo(targetMake, ModelState);
-
-                if (!ModelState.IsValid) return BadRequest(ModelState);
-
-                await _vehicleService.UpdateVehicleMake(id, targetMake);
-
-                return Json(targetMake);
+                return RedirectToAction("ReadMake", new { id = updatedVehicleMake.Id });
             }
 
-            return BadRequest(ModelState);
+            return View("~/Views/Administration/VehicleMake/EditMake.cshtml", updatedVehicleMake);
         }
 
+
+        // DELETE MAKE
         [HttpGet("makes/delete/{id}")]
         public async Task<ActionResult> DeleteMake(int id)
         {
@@ -151,8 +148,7 @@ namespace Project.MVC.Controllers
         }
         
 
-
-
+        // READ MODEL
         [HttpGet("models")]
         public async Task<IActionResult> AdministrateModels()
         {
@@ -172,6 +168,16 @@ namespace Project.MVC.Controllers
             return View("~/Views/Administration/VehicleModel/AdministrateModels.cshtml",vehicleModelsAdministrationView);
         }
 
+        [HttpGet("models/{id}")]
+        public async Task<ActionResult> ReadModel(int id)
+        {
+            var vehicleModel = (await _vehicleService.GetVehicleModel(id)).Value;
+
+            return View("~/Views/Administration/VehicleModel/ReadModel.cshtml", vehicleModel);
+        }
+
+
+        // CREATE MODEL
         [Route("models/create")]
         public async Task<ActionResult> CreateModel(CreateModelViewModel createModelState)
         {
@@ -214,17 +220,14 @@ namespace Project.MVC.Controllers
             }
         }
 
-        [HttpGet("models/{id}")]
-        public async Task<ActionResult> ReadModel(int id)
-        {
-            var vehicleModel = (await _vehicleService.GetVehicleModel(id)).Value;
 
-            return View("~/Views/Administration/VehicleModel/ReadModel.cshtml", vehicleModel);
-        }
-
+        // UPDATE MODEL
         [HttpGet("models/edit/{id}")]
-        public async Task<ActionResult<IEnumerable<VehicleModel>>> EditModel(int id)
+        public async Task<ActionResult> EditModel(int id)
         {
+            var vehicleMakes = (await _vehicleService.GetVehicleMakes()).Value;
+            var availableVehicleMakes = vehicleMakes.Select(make => new { make.Id, make.Name }).ToDictionary(make => make.Id, make => make.Name);
+            ViewBag.AvailableMakes = new SelectList(availableVehicleMakes, "Key", "Value");
             var vehicleMakeGetResult = (await _vehicleService.GetVehicleModel(id)).Value;
 
             if (vehicleMakeGetResult == null) return NotFound();
@@ -232,28 +235,21 @@ namespace Project.MVC.Controllers
             return View("~/Views/Administration/VehicleModel/EditModel.cshtml", vehicleMakeGetResult);
         }
 
-        [HttpPatch("models/{id}")]
-        public async Task<ActionResult<VehicleModel>> UpdateModel(int id, [FromBody] JsonPatchDocument<Service.Models.VehicleModel> modelPatch)
+        [HttpPost("models/edit")]
+        public async Task<ActionResult> UpdateModel(VehicleModel updatedVehicleModel)
         {
-            if (modelPatch != null)
+            if (ModelState.IsValid)
             {
+                await _vehicleService.UpdateVehicleModel(updatedVehicleModel.Id, updatedVehicleModel);
 
-                var targetModel = (await _vehicleService.GetVehicleModel(id)).Value;
-
-                if (targetModel == null) return NotFound();
-
-                modelPatch.ApplyTo(targetModel, ModelState);
-
-                if (!ModelState.IsValid) return BadRequest(ModelState);
-
-                await _vehicleService.UpdateVehicleModel(id, targetModel);
-
-                return Json(targetModel);
+                return RedirectToAction("ReadModel", new { id = updatedVehicleModel.Id });
             }
 
-            return BadRequest(ModelState);
+            return View("~/Views/Administration/VehicleModel/EditModel.cshtml", updatedVehicleModel);
         }
 
+
+        // DELETE MODEL
         [HttpGet("models/delete/{id}")]
         public async Task<ActionResult> DeleteModel(int id)
         {
