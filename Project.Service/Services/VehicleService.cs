@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Net;
+using System.Linq;
+using Project.Service.Utils.Paging;
 
 namespace Project.Service.Services
 {
@@ -92,6 +93,24 @@ namespace Project.Service.Services
             }
         }
 
+        public async Task<ActionResult<PagedList<VehicleMake>>> GetVehicleMakes(PaginationParameters makesPaginationPatameters)
+        {
+            var vehicleMakes = await _context.VehicleMakes.ToListAsync();
+            var vehicleMakesQuery = vehicleMakes.AsQueryable();
+
+            if (!string.IsNullOrEmpty(makesPaginationPatameters.Name))
+            {
+                var namesForFilter = makesPaginationPatameters.Name.Trim().ToLower();
+                vehicleMakesQuery = vehicleMakesQuery.Where(n => n.Name.ToLower() == namesForFilter);
+            }
+
+            return PagedList<VehicleMake>.Create(
+                                            vehicleMakesQuery,
+                                            makesPaginationPatameters.PageSize,
+                                            makesPaginationPatameters.PageNumber
+                                            );
+        }
+
         public async Task<ActionResult<IEnumerable<VehicleModel>>> GetVehicleModels()
         {
             return await _context.VehicleModels.ToListAsync();
@@ -114,6 +133,24 @@ namespace Project.Service.Services
             await _context.SaveChangesAsync();
 
             return existingModel;
+        }
+
+        public async Task<ActionResult<PagedList<VehicleModel>>> GetVehicleModels(PaginationParameters modelsPaginationPatameters)
+        {
+            var vehicleModels = await _context.VehicleModels.ToListAsync();
+            var vehicleModelsQuery = vehicleModels.AsQueryable();
+
+            if (!string.IsNullOrEmpty(modelsPaginationPatameters.Name))
+            {
+                var namesForFilter = modelsPaginationPatameters.Name.Trim().ToLower();
+                vehicleModelsQuery = vehicleModelsQuery.Where(n => n.Name.ToLower() == namesForFilter);
+            }
+
+            return PagedList<VehicleModel>.Create(
+                                            vehicleModelsQuery, 
+                                            modelsPaginationPatameters.PageSize, 
+                                            modelsPaginationPatameters.PageNumber
+                                            );
         }
     }
 }

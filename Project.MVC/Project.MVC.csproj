@@ -20,4 +20,9 @@
     <ProjectReference Include="..\Project.Service\Project.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Shared\Table\" />
+    <Folder Include="wwwroot\css\table\" />
+  </ItemGroup>
+
 </Project>
