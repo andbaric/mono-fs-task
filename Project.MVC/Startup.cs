@@ -1,7 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Project.Service.Models;
 using Project.Service.Services;
+using Project.Service.Utils.PropertyMappingService;
 using System;
 
 namespace Project.MVC
@@ -34,13 +34,15 @@ namespace Project.MVC
                 .AddControllersWithViews()
                 .AddNewtonsoftJson();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddTransient<IPropertyMappingService, PropertyMappingService>();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-            services.AddScoped<IUrlHelper>(construct =>
+            services.AddScoped(construct =>
             {
                 var actionContext = construct.GetRequiredService<IActionContextAccessor>().ActionContext;
                 var factory = construct.GetRequiredService<IUrlHelperFactory>();
                 return factory.GetUrlHelper(actionContext);
             });
+            
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -63,13 +65,14 @@ namespace Project.MVC
 
             app.UseAuthorization();
 
-            app.UseStatusCodePages();
+        //    app.UseStatusCodePages();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}"
+                    );
             });
         }
     }

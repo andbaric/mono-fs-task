@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Project.Service.Helpers;
+using Project.Service.Models.Entities;
 
 namespace Project.Service.Models
 {

@@ -8,6 +8,9 @@
     <div class="card-header">
         <partial name="_Navigation" model="Model.AdministrationNavigation" />
     </div>
+    <div>
+        <partial name="_GridMenu" />
+    </div>
     <div class="card-body">
         @(Html
                 .Grid(Model.TableData)

@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Project.MVC.Models.Administration.VehicleMake;
-using Project.MVC.Models.Administration.VehicleModel;
-using Project.Service.Models;
+using Project.Service.Models.Entities;
 
 namespace Project.MVC.Models.MapperProfiles
 {

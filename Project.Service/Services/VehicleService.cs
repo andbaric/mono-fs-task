@@ -7,15 +7,21 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using Project.Service.Utils.Paging;
+using Project.Service.Utils.PropertyMappingService;
+using Project.Service.Models.Entities;
+using Project.Service.Models.DTOs;
+using Project.Service.Helpers;
 
 namespace Project.Service.Services
 {
     public class VehicleService : IVehicleService
     {
         private readonly VehicleDbContext _context;
-        public VehicleService(VehicleDbContext context)
+        private readonly IPropertyMappingService _propertyMappingService;
+        public VehicleService(VehicleDbContext context, IPropertyMappingService propertyMappingService)
         {
             _context = context;
+            _propertyMappingService = propertyMappingService;
         }
 
         public async Task<ActionResult<VehicleMake>> CreateVehicleMake(VehicleMake newVehicleMake)
@@ -98,12 +104,20 @@ namespace Project.Service.Services
             var vehicleMakes = await _context.VehicleMakes.ToListAsync();
             var vehicleMakesQuery = vehicleMakes.AsQueryable();
 
+            //Sorter
+            if(!string.IsNullOrEmpty(makesPaginationPatameters.OrderBy))
+            {
+                vehicleMakesQuery = vehicleMakesQuery.ApplySort(makesPaginationPatameters.OrderBy, _propertyMappingService.GetPropertyMapping<VehicleMakeDto, VehicleMake>());
+            }
+
+            //Filter
             if (!string.IsNullOrEmpty(makesPaginationPatameters.Name))
             {
                 var namesForFilter = makesPaginationPatameters.Name.Trim().ToLower();
                 vehicleMakesQuery = vehicleMakesQuery.Where(n => n.Name.ToLower() == namesForFilter);
             }
 
+            //Pager
             return PagedList<VehicleMake>.Create(
                                             vehicleMakesQuery,
                                             makesPaginationPatameters.PageSize,

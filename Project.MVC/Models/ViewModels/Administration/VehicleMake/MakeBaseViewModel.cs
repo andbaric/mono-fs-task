@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Project.Service.Models
+namespace Project.MVC.Models.ViewModels.Administration.VehicleMake
 {
-    [Table("vehicle_make")]
-    public class VehicleMake : BaseModel
+    public class MakeBaseViewModel
     {
+        [Required]
+        public int Id { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]

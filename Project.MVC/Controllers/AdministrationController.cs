@@ -11,9 +11,10 @@ using Project.MVC.Models.Administration.VehicleMake;
 using Project.MVC.Models.Administration.VehicleModel;
 using Project.MVC.Models.Shared;
 using Project.MVC.Models.Shared.Enums;
-using Project.Service.Models;
+using Project.Service.Models.Entities;
 using Project.Service.Services;
 using Project.Service.Utils.Paging;
+using Project.Service.Utils.PropertyMappingService;
 
 namespace Project.MVC.Controllers
 {
@@ -23,16 +24,18 @@ namespace Project.MVC.Controllers
         private readonly IVehicleService _vehicleService;
         private readonly IMapper _mapper;
         private readonly IUrlHelper _urlHelper;
+        private readonly IPropertyMappingService _propertyMappingService;
 
-        public AdministrationController(IVehicleService vehicleService, IMapper mapper, IUrlHelper urlHelper)
+        public AdministrationController(IVehicleService vehicleService, IMapper mapper, IUrlHelper urlHelper, IPropertyMappingService propertyMappingService)
         {
             _vehicleService = vehicleService;
             _mapper = mapper;
             _urlHelper = urlHelper;
+            _propertyMappingService = propertyMappingService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> AdministrateVehicles()
+        public async Task<IActionResult> AdministrateVehicles(string gridView)
         {
             var vehicleMakes = (await _vehicleService.GetVehicleMakes()).Value;
             var vehicleModels = (await _vehicleService.GetVehicleModels()).Value;
@@ -46,6 +49,7 @@ namespace Project.MVC.Controllers
                                    ModelAbrv = model.Abrv
                                };
             var vehiclesAdministrationView = new AdministrationViewModel(vehiclesData);
+            ViewBag.GridView = gridView;
 
             return View("~/Views/Administration/AdministrateVehicles.cshtml", vehiclesAdministrationView);
         }
@@ -72,6 +76,7 @@ namespace Project.MVC.Controllers
                                                             makePaginationParameters.PageSize,
                                                             makePaginationParameters.PageNumber
                                                            );
+
             var previousPageLink = paginatedVehicleMakes.HasPreviousPage ?
                 _urlHelper.GeneratePaginatedResourceUrl("administration/makess",
                                 makePaginationParameters, PagedResourceUrlType.PreviousPage) : null;
@@ -107,7 +112,7 @@ namespace Project.MVC.Controllers
                 var createdVehicleMake = (await _vehicleService.CreateVehicleMake(newVehicleMake)).Value;
                 var messageType = FeedbackMessageType.Sucess;
                 var sucessCreateViewModel = new CreateMakeViewModel() { 
-                    MessageType = messageType, MessageText = FeedbackMessageBase.GeneratreFeedbackMessage(messageType, crudAction, createdVehicleMake.Name) 
+                    MessageType = messageType, MessageText = FeedbackMessageBase.CRUDMessage(messageType, crudAction, createdVehicleMake.Name) 
                 };
   
                 return RedirectToAction("CreateMake", sucessCreateViewModel);
@@ -118,7 +123,7 @@ namespace Project.MVC.Controllers
                 var failedCreateViewModel = new CreateMakeViewModel()
                 {
                     MessageType = messageType,
-                    MessageText = FeedbackMessageBase.GeneratreFeedbackMessage(messageType, crudAction, newVehicleMake.Name)
+                    MessageText = FeedbackMessageBase.CRUDMessage(messageType, crudAction, newVehicleMake.Name)
                 };
 
                 return View("~/Views/Administration/VehicleMake/CreateMake.cshtml", failedCreateViewModel);
@@ -237,7 +242,7 @@ namespace Project.MVC.Controllers
                 var sucessCreateViewModel = new CreateModelViewModel()
                 {
                     MessageType = messageType,
-                    MessageText = FeedbackMessageBase.GeneratreFeedbackMessage(messageType, crudAction, createdVehicleModel.Name)
+                    MessageText = FeedbackMessageBase.CRUDMessage(messageType, crudAction, createdVehicleModel.Name)
                 };
 
                 return RedirectToAction("CreateModel", sucessCreateViewModel);
@@ -248,7 +253,7 @@ namespace Project.MVC.Controllers
                 var failedCreateViewModel = new CreateModelViewModel()
                 {
                     MessageType = messageType,
-                    MessageText = FeedbackMessageBase.GeneratreFeedbackMessage(messageType, crudAction, "")
+                    MessageText = FeedbackMessageBase.CRUDMessage(messageType, crudAction, "")
                 };
 
                 return RedirectToAction("CreateVehicleModel", failedCreateViewModel);

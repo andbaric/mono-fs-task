@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Project.Service.Models;
+using Project.Service.Models.Entities;
 using Project.Service.Utils.Paging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -24,5 +24,8 @@ namespace Project.Service.Services
         Task<ActionResult<VehicleModel>> DeleteVehicleModel(int id);
 
         Task<ActionResult<PagedList<VehicleModel>>> GetVehicleModels(PaginationParameters modelsPaginationPatameters);
+
+
+
     }
 }

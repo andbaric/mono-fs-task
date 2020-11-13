@@ -26,5 +26,6 @@ namespace Project.Service.Utils.Paging
         public string Name { get; set; }
         public string Abrv { get; set; }
         public string MakeName { get; set; }
+        public string OrderBy { get; set; } = "Name";
     }
 }

@@ -10,7 +10,7 @@ namespace Project.MVC.Models.Shared
 
         public string MessageText { get; set; }
 
-        public static string GeneratreFeedbackMessage(FeedbackMessageType messageType, CRUDActions action, string targetObject)
+        public static string CRUDMessage(FeedbackMessageType messageType, CRUDActions action, string targetObject)
         {
             var actionSufix = "";
             var actionPrefix = "";

@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "Vehicles administration";
+}
+@using Project.MVC.Models.Administration;
+@model AdministrationViewModel
+
+<div class="card text-center">
+    <div class="card-header">
+        <partial name="_Navigation" model="Model.AdministrationNavigation" />
+    </div>
+    <div class="card-body">
+        <partial name="_Table" model="Model.TableData" />
+    </div>
+</div>

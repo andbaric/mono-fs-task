@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Project.Service.Models
+namespace Project.Service.Models.Entities
 {
     [Table("vehicle_model")]
     public class VehicleModel : BaseModel

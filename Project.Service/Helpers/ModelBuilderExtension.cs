@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using Project.Service.Models.Entities;
 using System.Collections.Generic;
 
-namespace Project.Service.Models
+namespace Project.Service.Helpers
 {
     public static class ModelBuilderExtension
     {

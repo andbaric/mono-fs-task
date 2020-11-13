@@ -15,6 +15,7 @@ namespace Project.MVC.Models.Shared
                     return urlHelper.Link(srcRoute,
                             new
                             {
+                                orderBy = paginationParameters.OrderBy,
                                 name = paginationParameters.Name,
                                 pageSize = paginationParameters.PageSize,
                                 pageNumber = paginationParameters.PageNumber - 1
@@ -23,6 +24,7 @@ namespace Project.MVC.Models.Shared
                     return urlHelper.Link(srcRoute,
                             new
                             {
+                                orderBy = paginationParameters.OrderBy,
                                 name = paginationParameters.Name,
                                 pageSize = paginationParameters.PageSize,
                                 pageNumber = paginationParameters.PageNumber + 1
@@ -31,6 +33,7 @@ namespace Project.MVC.Models.Shared
                     return urlHelper.Link(srcRoute,
                             new
                             {
+                                orderBy = paginationParameters.OrderBy,
                                 name = paginationParameters.Name,
                                 pageSize = paginationParameters.PageSize,
                                 pageNumber = paginationParameters.PageNumber
