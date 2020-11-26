@@ -26,6 +26,7 @@ namespace Project.MVC
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IVehicleService, VehicleService>();
+            services.AddScoped<IVehicleAdministrationService, VehicleAdministrationService>();
             services.AddDbContext<VehicleDbContext>(options =>
             {
                 options.UseMySql(Configuration.GetConnectionString("VehicleDb"));

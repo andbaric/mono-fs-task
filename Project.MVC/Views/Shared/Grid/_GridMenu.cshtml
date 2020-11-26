@@ -1,0 +1,13 @@
+﻿<nav class="navbar navbar-expand-sm">
+    <ul class="navbar-nav ml-auto">
+        @foreach (var link in Model.Links)
+        {
+            <li class="nav-item">
+                <a asp-controller="@link.ControllerName" asp-action="@link.ControllerAction" asp-route-gridView="@link.RouteParams" class="btn btn-secondary btn-sm m-2 @link.Activity">
+                    <i class="@link.Icon.IconClassName"></i>
+                    <span>@link.Text</span>
+                </a>
+            </li>
+        }
+    </ul>
+</nav>

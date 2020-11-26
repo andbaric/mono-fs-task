@@ -21,8 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\LinkGenerator\" />
-    <Folder Include="Views\Shared\Administration\" />
+    <Folder Include="Models\ViewModels\Shared\Grid\" />
     <Folder Include="wwwroot\css\table\" />
   </ItemGroup>
 

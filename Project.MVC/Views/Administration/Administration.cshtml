@@ -1,14 +1,12 @@
 ﻿@{
-    ViewData["Title"] = "Vehicles administration";
+    ViewData["Title"] = Model.Title;
 }
-@using Project.MVC.Models.Administration;
-@model AdministrationViewModel
 
 <div class="card text-center">
     <div class="card-header">
-        <partial name="_Navigation" model="Model.AdministrationNavigation" />
+        <partial name="_Navigation" model="Model.Navigation" />
     </div>
     <div class="card-body">
-        <partial name="_Table" model="Model.TableData" />
+        <partial name="~/Views/Shared/Grid/_Grid.cshtml" model="Model.Grid" />
     </div>
 </div>

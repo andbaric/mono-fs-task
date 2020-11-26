@@ -1,0 +1,31 @@
+﻿@using Project.Service.Models.DTOs.VehicleAdministration
+
+@model IEnumerable<ReadVehiclesDto>
+
+<div class="card-body">
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Make name</th>
+                <th scope="col">Make abrv</th>
+                <th scope="col">Model name</th>
+                <th scope="col">Model abrv</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ int itemNum = 1; }
+            @foreach (var item in Model)
+            {
+            <tr>
+                <th scope="row">@itemNum</th>
+                <td>@item.MakeName</td>
+                <td>@item.MakeAbrv</td>
+                <td>@item.ModelName</td>
+                <td>@item.ModelAbrv</td>
+            </tr>
+                itemNum++;
+            }
+        </tbody>
+    </table>
+</div>

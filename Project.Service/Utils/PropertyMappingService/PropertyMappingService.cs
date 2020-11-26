@@ -1,9 +1,8 @@
 ﻿using Project.Service.Models.Entities;
-using Project.Service.Models.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Project.Service.Models.DTOs.VehicleAdministration.VehicleMakes;
 
 namespace Project.Service.Utils.PropertyMappingService
 {
@@ -11,17 +10,17 @@ namespace Project.Service.Utils.PropertyMappingService
     {
         public PropertyMappingService()
         {
-            propertyMappings.Add(new PropertyMapping<VehicleMakeDto, VehicleMake>(_makePropertyMapping));
+            propertyMappings.Add(new PropertyMapping<ReadMakeDto, VehicleMake>(_makePropertyMapping));
         }
 
-        private Dictionary<string, PropertyMappingValue> _makePropertyMapping =
+        private readonly Dictionary<string, PropertyMappingValue> _makePropertyMapping =
             new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
             {
                 { "Id", new PropertyMappingValue ( new List<string>() { "Id" } ) },
                 { "Name", new PropertyMappingValue ( new List<string>() { "Name", "Abrv" } ) }
             };
 
-        private IList<IPropertyMapping> propertyMappings = new List<IPropertyMapping>();
+        private readonly IList<IPropertyMapping> propertyMappings = new List<IPropertyMapping>();
 
         public Dictionary<string, PropertyMappingValue> GetPropertyMapping<TSource, TDestination>()
         {

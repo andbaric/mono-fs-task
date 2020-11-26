@@ -1,19 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Project.MVC.Models;
-using Project.MVC.Models.Administration;
-using Project.MVC.Models.Administration.VehicleMake;
 using Project.MVC.Models.Administration.VehicleModel;
+using Project.MVC.Models.Administration;
 using Project.MVC.Models.Shared;
 using Project.MVC.Models.Shared.Enums;
 using Project.Service.Models.Entities;
 using Project.Service.Services;
-using Project.Service.Utils.Paging;
 using Project.Service.Utils.PropertyMappingService;
 
 namespace Project.MVC.Controllers
@@ -22,13 +18,16 @@ namespace Project.MVC.Controllers
     public class AdministrationController : Controller
     {
         private readonly IVehicleService _vehicleService;
+        private readonly IVehicleAdministrationService _vehicleAdministrationService;
         private readonly IMapper _mapper;
         private readonly IUrlHelper _urlHelper;
         private readonly IPropertyMappingService _propertyMappingService;
 
-        public AdministrationController(IVehicleService vehicleService, IMapper mapper, IUrlHelper urlHelper, IPropertyMappingService propertyMappingService)
+        public AdministrationController(IVehicleService vehicleService, IMapper mapper, IUrlHelper urlHelper, 
+            IPropertyMappingService propertyMappingService, IVehicleAdministrationService vehicleAdministrationService)
         {
             _vehicleService = vehicleService;
+            _vehicleAdministrationService = vehicleAdministrationService;
             _mapper = mapper;
             _urlHelper = urlHelper;
             _propertyMappingService = propertyMappingService;
@@ -37,73 +36,38 @@ namespace Project.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> AdministrateVehicles(string gridView)
         {
-            var vehicleMakes = (await _vehicleService.GetVehicleMakes()).Value;
-            var vehicleModels = (await _vehicleService.GetVehicleModels()).Value;
-            var vehiclesData = from make in vehicleMakes
-                               join model in vehicleModels on make.Id equals model.MakeId
-                               select new VehicleViewModel
-                               {
-                                   MakeName = make.Name,
-                                   MakeAbrv= make.Abrv,
-                                   ModelName = model.Name,
-                                   ModelAbrv = model.Abrv
-                               };
-            var vehiclesAdministrationView = new AdministrationViewModel(vehiclesData);
-            ViewBag.GridView = gridView;
-
-            return View("~/Views/Administration/AdministrateVehicles.cshtml", vehiclesAdministrationView);
+            var vehicles = (await _vehicleAdministrationService.ReadVehicles()).Value;
+            var vehiclesAdministrationView = vehicles.GetAdministrationView("", gridView);
+            
+            return View("~/Views/Administration/Administration.cshtml", vehiclesAdministrationView);
         }
 
         // READ MAKES
         [HttpGet("makes")]
-        public async Task<ActionResult<VehicleMake>> AdministrateMakes()
+        public async Task<IActionResult> AdministrateMakes(string gridView)
         {
-            var vehicleMakes = (await _vehicleService.GetVehicleMakes()).Value;
-            var mappedEntityToTableDataView = _mapper.Map<IEnumerable<MakeTableDataViewModel>>(vehicleMakes);
-            var vehicleMakesAdministrationView = new AdministrateMakesViewModel(mappedEntityToTableDataView);
+            var makes = (await _vehicleAdministrationService.ReadVehicleMakes()).Value;
+            var makesAdministrationView = makes.GetAdministrationView("makes", gridView);
 
-            return View("~/Views/Administration/VehicleMake/AdministrateMakes.cshtml", vehicleMakesAdministrationView);
-        }
-
-        [HttpGet("makess")]
-        public async Task<ActionResult<PagedList<VehicleMake>>> AdministrateMakes(PaginationParameters makePaginationParameters)
-        {
-            var vehicleMakes = (await _vehicleService.GetVehicleMakes(makePaginationParameters)).Value;
-            var vehicleMakesQuery = vehicleMakes.AsQueryable();
-
-            var paginatedVehicleMakes = PagedList<VehicleMake>.Create(
-                                                            vehicleMakesQuery,
-                                                            makePaginationParameters.PageSize,
-                                                            makePaginationParameters.PageNumber
-                                                           );
-
-            var previousPageLink = paginatedVehicleMakes.HasPreviousPage ?
-                _urlHelper.GeneratePaginatedResourceUrl("administration/makess",
-                                makePaginationParameters, PagedResourceUrlType.PreviousPage) : null;
-            var nextPageLink = paginatedVehicleMakes.HasNextPage ?
-                _urlHelper.GeneratePaginatedResourceUrl("administration/makess",
-                                makePaginationParameters, PagedResourceUrlType.PreviousPage) : null;
-
-            return Ok(paginatedVehicleMakes);
+            return View("~/Views/Administration/Administration.cshtml", makesAdministrationView);
         }
 
         [HttpGet("makes/{id}")]
-        public async Task<ActionResult> ReadMake(int id)
+        public async Task<IActionResult> ReadMake(int id)
         {
             var vehicleMake = (await _vehicleService.GetVehicleMake(id)).Value;
 
             return View("~/Views/Administration/VehicleMake/ReadMake.cshtml", vehicleMake);
         }
 
-
         //CREATE MAKE
-        [Route("makes/create")]
+       /* [Route("makes/create")]
         public ActionResult CreateMake(CreateMakeViewModel createMakeState)
         {
             return View("~/Views/Administration/VehicleMake/CreateMake.cshtml", createMakeState);
         }
-
-        [HttpPost("makes/create")]
+*/
+        /*[HttpPost("makes/create")]
         public async Task<IActionResult> CreateMake(VehicleMake newVehicleMake)
         {
             var crudAction = CRUDActions.Create;
@@ -128,7 +92,7 @@ namespace Project.MVC.Controllers
 
                 return View("~/Views/Administration/VehicleMake/CreateMake.cshtml", failedCreateViewModel);
             }
-        }
+        }*/
 
         // UPDATE MAKE
         [HttpGet("makes/edit/{id}")]
@@ -142,7 +106,7 @@ namespace Project.MVC.Controllers
         }
 
         [HttpPost("makes/edit")]
-        public async Task<ActionResult> UpdateMake(VehicleMake updatedVehicleMake)
+        public async Task<IActionResult> UpdateMake(VehicleMake updatedVehicleMake)
         {
             if (ModelState.IsValid)
             {
@@ -167,7 +131,7 @@ namespace Project.MVC.Controllers
         }
 
         [HttpPost("makes/delete/{id}")]
-        public async Task<ActionResult> DeleteMake(int id, IFormCollection form)
+        public async Task<IActionResult> DeleteMake(int id, IFormCollection form)
         {
             await _vehicleService.DeleteVehicleMake(id);
 
@@ -177,50 +141,17 @@ namespace Project.MVC.Controllers
 
         // READ MODEL
         [HttpGet("models")]
-        public async Task<ActionResult> AdministrateModels()
+        public async Task<IActionResult> AdministrateModels(string gridView)
         {
-            var vehicleModels = (await _vehicleService.GetVehicleModels()).Value;
-            var vehicleMakes = (await _vehicleService.GetVehicleMakes()).Value;
-            var vehiclesModelsTableData = from make in vehicleMakes
-                                          join model in vehicleModels on make.Id equals model.MakeId
-                                          select new ModelTableDataModelViewModel
-                                          {
-                                              ModelId = model.Id,
-                                              MakeAbrv = make.Abrv,
-                                              ModelName = model.Name,
-                                              ModelAbrv = model.Abrv
-                                          };
-            var vehicleModelsAdministrationView = new AdministrateModelsViewModel(vehiclesModelsTableData);
+            var models = (await _vehicleAdministrationService.ReadVehicleModels()).Value;
+            var modelsAdministrationView = models.GetAdministrationView("models", gridView);
 
-            return View("~/Views/Administration/VehicleModel/AdministrateModels.cshtml", vehicleModelsAdministrationView);
+            return View("~/Views/Administration/Administration.cshtml", modelsAdministrationView);
         }
-
-        [HttpGet("modelss")]
-        public async Task<ActionResult<PagedList<VehicleModel>>> AdministrateModels(PaginationParameters modelPaginationParameters)
-        {
-            var vehicleModels = (await _vehicleService.GetVehicleModels(modelPaginationParameters)).Value;
-            var vehicleModelsQuery = vehicleModels.AsQueryable();
-
-            var pagedVehicleModels = PagedList<VehicleModel>.Create(
-                                                            vehicleModelsQuery,
-                                                            modelPaginationParameters.PageSize,
-                                                            modelPaginationParameters.PageNumber
-                                                           );
-            return Ok(pagedVehicleModels);
-        }
-
-        [HttpGet("models/{id}")]
-        public async Task<ActionResult> ReadModel(int id)
-        {
-            var vehicleModel = (await _vehicleService.GetVehicleModel(id)).Value;
-
-            return View("~/Views/Administration/VehicleModel/ReadModel.cshtml", vehicleModel);
-        }
-
 
         // CREATE MODEL
         [Route("models/create")]
-        public async Task<ActionResult> CreateModel(CreateModelViewModel createModelState)
+        public async Task<IActionResult> CreateModel(CreateModelViewModel createModelState)
         {
             var vehicleMakes = (await _vehicleService.GetVehicleMakes()).Value;
             var availableVehicleMakes = vehicleMakes.Select(make => new { make.Id, make.Name }).ToDictionary(make => make.Id, make => make.Name);
@@ -231,7 +162,7 @@ namespace Project.MVC.Controllers
         }
 
         [HttpPost("models/create")]
-        public async Task<ActionResult> CreateModel(VehicleModel newVehicleModel)
+        public async Task<IActionResult> CreateModel(VehicleModel newVehicleModel)
         {
             var crudAction = CRUDActions.Create;
 

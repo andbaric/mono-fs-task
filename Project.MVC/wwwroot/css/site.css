@@ -90,3 +90,7 @@ body {
 label {
     font-weight: 500;
 }
+
+.table > tbody > tr > td, .table > tbody > tr > th {
+    vertical-align: middle;
+}

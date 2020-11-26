@@ -1,0 +1,46 @@
+﻿@using Project.Service.Models.DTOs.VehicleAdministration.VehicleModels
+
+@model IEnumerable<ReadModelsDto>
+
+<a role="button" href="#" class="btn btn-secondary btn-lg btn-block">
+    <i class="fas fa-plus"></i>
+    New model
+</a>
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Make name</th>
+            <th scope="col">Name</th>
+            <th scope="col">Abrv</th>
+            <th scope="col">CRUD actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    @{ int itemNum = 1; }
+    @foreach (var item in Model)
+    {
+        <tr>
+            <th>@itemNum</th>
+            <td>@item.MakeName</td>
+            <td>@item.Name</td>
+            <td>@item.Abrv</td>
+            <td>
+                <a role="button" href="#" class="btn btn-secondary">
+                    <i class="fas fa-info-circle"></i>
+                    Details
+                </a>
+                <a role="button" href="#" class="btn btn-secondary">
+                    <i class="fas fa-edit"></i>
+                    Edit
+                </a>
+                <a role="button" href="#" class="btn btn-danger">
+                    <i class="fas fa-trash"></i>
+                    Delete
+                </a>
+            </td>
+        </tr>
+        itemNum++;
+    }
+    </tbody>
+</table>

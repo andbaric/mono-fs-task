@@ -1,10 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Project.Service.Utils.Filtering;
-using Project.Service.Utils.Sorting;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Project.Service.Utils.Paging
@@ -27,11 +23,11 @@ namespace Project.Service.Utils.Paging
 
         public bool HasPreviousPage
         {
-            get { return (CurrentPage > 1); }
+            get { return CurrentPage > 1; }
         }
         public bool HasNextPage
         {
-            get { return (CurrentPage < TotalPages); }
+            get { return CurrentPage < TotalPages; }
         }
 
         public static PagedList<T> Create(IQueryable<T> data, int pageSize, int pageNumber)
@@ -41,8 +37,9 @@ namespace Project.Service.Utils.Paging
                 .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
                 .ToList();
+            var pagedList = new PagedList<T>(items, count, pageSize, pageNumber);
 
-            return new PagedList<T>(items, count, pageSize, pageNumber);
+            return pagedList;
         }
     }
 }

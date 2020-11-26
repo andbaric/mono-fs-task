@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
-using Project.MVC.Models.Shared.Enums;
-using System.ComponentModel.DataAnnotations;
+﻿using Project.MVC.Models.Shared.Enums;
 
 namespace Project.MVC.Models.Shared
 {

@@ -1,29 +1,23 @@
-﻿
-using Project.Service.Models;
+﻿using Project.Service.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Linq;
-using Project.Service.Utils.Paging;
 using Project.Service.Utils.PropertyMappingService;
 using Project.Service.Models.Entities;
-using Project.Service.Models.DTOs;
-using Project.Service.Helpers;
 
 namespace Project.Service.Services
 {
     public class VehicleService : IVehicleService
     {
         private readonly VehicleDbContext _context;
-        private readonly IPropertyMappingService _propertyMappingService;
         public VehicleService(VehicleDbContext context, IPropertyMappingService propertyMappingService)
         {
             _context = context;
-            _propertyMappingService = propertyMappingService;
         }
 
+        // Make
         public async Task<ActionResult<VehicleMake>> CreateVehicleMake(VehicleMake newVehicleMake)
         {
             _context.VehicleMakes.Add(newVehicleMake);
@@ -32,47 +26,13 @@ namespace Project.Service.Services
             return newVehicleMake;
         }
 
-        public async Task<ActionResult<VehicleModel>> CreateVehicleModel(VehicleModel newVehicleModel)
-        {
-            _context.VehicleModels.Add(newVehicleModel);
-            await _context.SaveChangesAsync();
-
-            return newVehicleModel;
-        }
-
-        public async Task<ActionResult<VehicleMake>> DeleteVehicleMake(int id)
-        {
-            var targetMake = (await GetVehicleMake(id)).Value;
-
-            if (targetMake != null)
-            {
-                _context.VehicleMakes.Remove(targetMake);
-                await _context.SaveChangesAsync();
-            }
-
-            return targetMake;
-        }
-
-        public async Task<ActionResult<VehicleModel>> DeleteVehicleModel(int id)
-        {
-            var targetModel = (await GetVehicleModel(id)).Value;
-
-            if (targetModel != null)
-            {
-                _context.VehicleModels.Remove(targetModel);
-                await _context.SaveChangesAsync();
-            }
-            
-            return targetModel;
-        }
-
-        public async Task<ActionResult<VehicleMake>> GetVehicleMake(int id)
+        public async Task<ActionResult<VehicleMake>> GetVehicleMake(int makeId)
         {
             var query = _context.VehicleMakes.AsQueryable();
 
             try
             {
-                return await query.SingleOrDefaultAsync(p => p.Id == id);
+                return await query.SingleOrDefaultAsync(p => p.Id == makeId);
             }
             catch (InvalidOperationException ex)
             {
@@ -85,13 +45,44 @@ namespace Project.Service.Services
             return await _context.VehicleMakes.ToListAsync();
         }
 
-        public async Task<ActionResult<VehicleModel>> GetVehicleModel(int id)
+        public async Task<ActionResult<VehicleMake>> UpdateVehicleMake(int makeId, VehicleMake updatedVehicleMake)
+        {
+            var existingMake = (await GetVehicleMake(makeId)).Value;
+            _context.Entry(existingMake).CurrentValues.SetValues(updatedVehicleMake);
+            await _context.SaveChangesAsync();
+
+            return existingMake;
+        }
+
+        public async Task<ActionResult<VehicleMake>> DeleteVehicleMake(int makeId)
+        {
+            var targetMake = (await GetVehicleMake(makeId)).Value;
+
+            if (targetMake != null)
+            {
+                _context.VehicleMakes.Remove(targetMake);
+                await _context.SaveChangesAsync();
+            }
+
+            return targetMake;
+        }
+
+        // Model
+        public async Task<ActionResult<VehicleModel>> CreateVehicleModel(VehicleModel newVehicleModel)
+        {
+            _context.VehicleModels.Add(newVehicleModel);
+            await _context.SaveChangesAsync();
+
+            return newVehicleModel;
+        }
+
+        public async Task<ActionResult<VehicleModel>> GetVehicleModel(int modelId)
         {
             var query = _context.VehicleModels.AsQueryable();
 
             try
             {
-                return await query.SingleOrDefaultAsync(p => p.Id == id);
+                return await query.SingleOrDefaultAsync(p => p.Id == modelId);
             }
             catch (InvalidOperationException ex)
             {
@@ -99,72 +90,31 @@ namespace Project.Service.Services
             }
         }
 
-        public async Task<ActionResult<PagedList<VehicleMake>>> GetVehicleMakes(PaginationParameters makesPaginationPatameters)
-        {
-            var vehicleMakes = await _context.VehicleMakes.ToListAsync();
-            var vehicleMakesQuery = vehicleMakes.AsQueryable();
-
-            //Sorter
-            if(!string.IsNullOrEmpty(makesPaginationPatameters.OrderBy))
-            {
-                vehicleMakesQuery = vehicleMakesQuery.ApplySort(makesPaginationPatameters.OrderBy, _propertyMappingService.GetPropertyMapping<VehicleMakeDto, VehicleMake>());
-            }
-
-            //Filter
-            if (!string.IsNullOrEmpty(makesPaginationPatameters.Name))
-            {
-                var namesForFilter = makesPaginationPatameters.Name.Trim().ToLower();
-                vehicleMakesQuery = vehicleMakesQuery.Where(n => n.Name.ToLower() == namesForFilter);
-            }
-
-            //Pager
-            return PagedList<VehicleMake>.Create(
-                                            vehicleMakesQuery,
-                                            makesPaginationPatameters.PageSize,
-                                            makesPaginationPatameters.PageNumber
-                                            );
-        }
-
         public async Task<ActionResult<IEnumerable<VehicleModel>>> GetVehicleModels()
         {
             return await _context.VehicleModels.ToListAsync();
         }
 
-
-        public async Task<ActionResult<VehicleMake>> UpdateVehicleMake(int id, VehicleMake updatedVehicleMake)
+        public async Task<ActionResult<VehicleModel>> UpdateVehicleModel(int modelId, VehicleModel updatedVehicleModel)
         {
-            var existingMake = (await GetVehicleMake(id)).Value;
-            _context.Entry(existingMake).CurrentValues.SetValues(updatedVehicleMake);
-            await _context.SaveChangesAsync();
-
-            return existingMake;
-        }
-
-        public async Task<ActionResult<VehicleModel>> UpdateVehicleModel(int id, VehicleModel updatedVehicleModel)
-        {
-            var existingModel = (await GetVehicleModel(id)).Value;
+            var existingModel = (await GetVehicleModel(modelId)).Value;
             _context.Entry(existingModel).CurrentValues.SetValues(updatedVehicleModel);
             await _context.SaveChangesAsync();
 
             return existingModel;
         }
 
-        public async Task<ActionResult<PagedList<VehicleModel>>> GetVehicleModels(PaginationParameters modelsPaginationPatameters)
+        public async Task<ActionResult<VehicleModel>> DeleteVehicleModel(int modelId)
         {
-            var vehicleModels = await _context.VehicleModels.ToListAsync();
-            var vehicleModelsQuery = vehicleModels.AsQueryable();
+            var targetModel = (await GetVehicleModel(modelId)).Value;
 
-            if (!string.IsNullOrEmpty(modelsPaginationPatameters.Name))
+            if (targetModel != null)
             {
-                var namesForFilter = modelsPaginationPatameters.Name.Trim().ToLower();
-                vehicleModelsQuery = vehicleModelsQuery.Where(n => n.Name.ToLower() == namesForFilter);
+                _context.VehicleModels.Remove(targetModel);
+                await _context.SaveChangesAsync();
             }
 
-            return PagedList<VehicleModel>.Create(
-                                            vehicleModelsQuery, 
-                                            modelsPaginationPatameters.PageSize, 
-                                            modelsPaginationPatameters.PageNumber
-                                            );
+            return targetModel;
         }
     }
 }

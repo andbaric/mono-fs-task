@@ -1,13 +1,38 @@
-﻿<ul class="nav nav-tabs card-header-tabs">
-    @foreach (var link in Model.Links)
+﻿@using Project.MVC.Models.Shared.Enums;
+@using Project.Service.Models.DTOs.VehicleAdministration.VehicleMakes;
+@using Project.Service.Models.DTOs.VehicleAdministration.VehicleModels;
+@using Project.Service.Models.DTOs.VehicleAdministration;
+
+<partial name="~/Views/Shared/Grid/_GridMenu.cshtml" model="Model.Menu" />
+
+@{ if (Model.Type == GridType.Mvc)
     {
-        <li class="nav-item">
-            <a asp-controller="@link.ControllerName"
-               asp-action="@link.ControllerAction"
-               class="nav-link @link.Activity">
-                <i class="fas fa-@link.Icon"></i>
-                <span>@link.Text</span>
-            </a>
-        </li>
-     }
-</ul>
+        if (Model.DataSource is IEnumerable<ReadVehiclesDto>)
+        {
+            <partial name="~/Views/Shared/Grid/Mvc/_VehiclesAdministration.cshtml" model="Model.DataSource" />
+        }
+        else if (Model.DataSource is IEnumerable<ReadMakesDto>)
+        {
+            <partial name="~/Views/Shared/Grid/Mvc/_MakesAdministration.cshtml" model="Model.DataSource" />
+        }
+        else if (Model.DataSource is IEnumerable<ReadModelsDto>)
+        {
+            <partial name="~/Views/Shared/Grid/Mvc/_ModelsAdministration.cshtml" model="Model.DataSource" />
+        }
+    }
+    else
+    {
+        if (Model.DataSource is IEnumerable<ReadVehiclesDto>)
+        {
+            <partial name="~/Views/Shared/Grid/Custom/_VehiclesAdministration.cshtml" model="Model.DataSource" />
+        }
+        else if (Model.DataSource is IEnumerable<ReadMakesDto>)
+        {
+            <partial name="~/Views/Shared/Grid/Custom/_MakesAdministration.cshtml" model="Model.DataSource" />
+        }
+        else if (Model.DataSource is IEnumerable<ReadModelsDto>)
+        {
+            <partial name="~/Views/Shared/Grid/Custom/_ModelsAdministration.cshtml" model="Model.DataSource" />
+        }
+    }
+}

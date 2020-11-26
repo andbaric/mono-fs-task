@@ -2,10 +2,8 @@
     @foreach (var link in Model.Links)
     {
         <li class="nav-item">
-            <a asp-controller="@link.ControllerName"
-               asp-action="@link.ControllerAction"
-               class="nav-link @link.Activity">
-                <i class="fas fa-@link.Icon"></i>
+            <a asp-controller="@link.ControllerName" asp-action="@link.ControllerAction" asp-route-gridView="@link.RouteParams" class="nav-link @link.Activity">
+                <i class="@link.Icon.IconClassName"></i>
                 <span>@link.Text</span>
             </a>
         </li>

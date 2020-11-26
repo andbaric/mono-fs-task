@@ -1,0 +1,27 @@
+﻿@using Project.Service.Models.DTOs.VehicleAdministration
+
+@model IEnumerable<ReadVehiclesDto>
+
+<div class="card-body">
+    @(Html
+        .Grid(Model)
+        .Build(columns =>
+        {
+            columns.Add().RenderedAs((model, row) => row + 1).Titled("#").Css("text-center");
+            columns.Add(model => model.MakeName).Titled("Make name");
+            columns.Add(model => model.MakeAbrv).Titled("Make abrv");
+            columns.Add(model => model.ModelName).Titled("Model name");
+            columns.Add(model => model.ModelAbrv).Titled("Model abrv");
+
+        })
+        .Using(GridFilterMode.Header)
+        .Empty("No data found")
+        .Filterable()
+        .Sortable()
+        .Pageable(pager =>
+        {
+            pager.PageSizes = new Dictionary<Int32, String> { { 7, "7" }, { 14, "14" }, { 0, "All" } };
+                    pager.ShowPageSizes = true;
+            })
+        )
+</div>
