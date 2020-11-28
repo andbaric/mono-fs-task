@@ -68,7 +68,7 @@ namespace Project.MVC.Controllers
         [HttpPost("makes/create")]
         public async Task<IActionResult> CreateMake(CreateMakeDto newVehicleMake)
         {
-            //simplify message
+            //simplify message, create view models
             var crudAction = CRUDActions.Create;
             if (ModelState.IsValid)
             {
