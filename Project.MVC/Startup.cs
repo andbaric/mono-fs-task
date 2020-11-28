@@ -66,7 +66,7 @@ namespace Project.MVC
 
             app.UseAuthorization();
 
-        //    app.UseStatusCodePages();
+            app.UseStatusCodePages();
 
             app.UseEndpoints(endpoints =>
             {

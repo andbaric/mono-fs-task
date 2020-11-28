@@ -5,6 +5,7 @@ using Project.Service.Models.DTOs.VehicleAdministration;
 using Project.Service.Models.DTOs.VehicleAdministration.VehicleMakes;
 using Project.Service.Models.DTOs.VehicleAdministration.VehicleModels;
 using Project.Service.Models.Entities;
+using Project.Service.Models.Mapper;
 using Project.Service.Utils.Paging;
 using Project.Service.Utils.PropertyMappingService;
 using System;
@@ -24,42 +25,47 @@ namespace Project.Service.Services
             _propertyMappingService = propertyMappingService;
         }
 
-        // Make
+        // Makes
         public async Task<ActionResult<CreateMakeDto>> CreateVehicleMake(CreateMakeDto newVehicleMake)
         {
-            // use mapper
-            _context.VehicleMakes.Add( new VehicleMake { Name = newVehicleMake.Name, Abrv = newVehicleMake.Abrv } );
+            var newMakeEntity = Mapping.Mapper.Map<VehicleMake>(newVehicleMake);
+
+            _context.VehicleMakes.Add(newMakeEntity);
             await _context.SaveChangesAsync();
 
             return newVehicleMake;
         }
         public async Task<ActionResult<ReadMakeDto>> ReadVehicleMake(int makeId)
         {
-            var targetMakeQuery = _context.VehicleMakes.AsQueryable();
-
+            var query = _context.VehicleMakes.AsQueryable().AsNoTracking();
             try
             {
-                await targetMakeQuery.SingleOrDefaultAsync(make => make.Id == makeId);
-                var targetMake = await targetMakeQuery.Select(make => new ReadMakeDto { Id = make.Id, Name = make.Name, Abrv = make.Abrv }).SingleAsync();
+                var targetMake = await query.Where(make => make.Id == makeId).SingleOrDefaultAsync();
+                var readtMakeDto = Mapping.Mapper.Map<ReadMakeDto>(targetMake);
 
-                return targetMake;
+                return readtMakeDto;
             }
             catch (InvalidOperationException ex)
             {
                 return null;
             }
         }
-
         public async Task<ActionResult<IEnumerable<ReadMakesDto>>> ReadVehicleMakes()
         {
-            var makes = await _context.VehicleMakes.Select(make => new ReadMakesDto { Name = make.Name, Abrv = make.Abrv }).ToListAsync();
+            var readMakesDto = await Mapping.Mapper.ProjectTo<ReadMakesDto>(_context.VehicleMakes).ToListAsync();
 
-            return makes;
+            return readMakesDto;
+        }
+        public async Task<ActionResult<IEnumerable<ReadOnlyMakesDto>>> ReadOnlyVehicleMakes()
+        {
+            var readOnlyMakesDto = await Mapping.Mapper.ProjectTo<ReadOnlyMakesDto>(_context.VehicleMakes).ToListAsync();
+
+            return readOnlyMakesDto;
         }
 
         public async Task<ActionResult<PagedList<ReadMakesDto>>> ReadVehicleMakes(PaginationParameters makesPaginationPatameters)
         {
-            var vehicleMakes = await _context.VehicleMakes.Select(make => new ReadMakesDto { Name = make.Name, Abrv = make.Abrv } ).ToListAsync();
+            var vehicleMakes = await _context.VehicleMakes.Select(make => Mapping.Mapper.Map<ReadMakesDto>(make)).ToListAsync();
             var vehicleMakesQuery = vehicleMakes.AsQueryable();
 
             //Sorter
@@ -80,72 +86,98 @@ namespace Project.Service.Services
             
             return pagedList;
         }
-
-        public async Task<ActionResult<ReadMakeDto>> UpdateVehicleMake(int makeId, UpdateMakeDto updatedMake)
+        public async Task<ActionResult<UpdateMakeDto>> UpdateVehicleMake(UpdateMakeDto updatedMake)
         {
-            var targetMake = (await ReadVehicleMake(makeId)).Value;
-
-            if (targetMake != null)
+            try
             {
+                var targetMake = await _context.VehicleMakes.Where(make => make.Id == updatedMake.Id).SingleOrDefaultAsync();
+
                 _context.Entry(targetMake).CurrentValues.SetValues(updatedMake);
                 await _context.SaveChangesAsync();
-            }
-               
-            return targetMake;
-        }
 
-        public async Task<ActionResult<ReadMakeDto>> DeleteVehicleMake(int makeId)
+                return updatedMake;
+            }
+            catch (InvalidOperationException ex)
+            {
+                return null;
+            }
+        }
+        public async Task<ActionResult<DeleteMakeDto>> DeleteVehicleMake(int id)
         {
-            var targetMake = (await ReadVehicleMake(makeId)).Value;
+            var targetMake = (await ReadVehicleMake(id)).Value;
 
             if (targetMake != null)
             {
-                
-                _context.VehicleMakes.Remove(new VehicleMake { Id = makeId });
+                var emakeToDelete = Mapping.Mapper.Map<VehicleMake>(targetMake);
+                _context.VehicleMakes.Remove(emakeToDelete);
                 await _context.SaveChangesAsync();
             }
 
-            return targetMake;
+            var test = new DeleteMakeDto { Id = 0 };
+            return test;
+        }
+        public async Task<ActionResult<Dictionary<int, string>>> GetAvailableMakes()
+        {
+            var availableMakesDto = await Mapping.Mapper.ProjectTo<AvailableMakeDto>(_context.VehicleMakes)
+                .ToDictionaryAsync(make => make.Id, make => make.Name);
+            
+            return availableMakesDto;
         }
 
 
-        // Model
+        // Models
         public async Task<ActionResult<CreateModelDto>> CreateVehicleModel(CreateModelDto newVehicleModel)
         {
-            var vehicleModelsQuery = await(
+            var vehicleModel = await(
                                      from model in _context.VehicleModels
                                      join make in _context.VehicleMakes on model.MakeId equals make.Id
                                      select new CreateModelDto { MakeId = make.Id, Name = model.Name, Abrv = model.Abrv }
-                                     ).SingleAsync();
+                                     ).SingleOrDefaultAsync();
+            var newModelEntity = Mapping.Mapper.Map<VehicleModel>(newVehicleModel);
 
-            var newModel = new VehicleModel { MakeId = vehicleModelsQuery.MakeId, Name = vehicleModelsQuery.Name, Abrv = vehicleModelsQuery.Abrv };
-            _context.VehicleModels.Add(newModel);
+            _context.VehicleModels.Add(newModelEntity);
             await _context.SaveChangesAsync();
 
-            return vehicleModelsQuery;
+            return newVehicleModel;
         }
+
         public async Task<ActionResult<ReadModelDto>> ReadVehicleModel(int modelId)
         {
-            var vehicleModelsQuery = await(
-                                     from model in _context.VehicleModels
-                                     join make in _context.VehicleMakes on model.MakeId equals make.Id
-                                     select new ReadModelDto { Id = model.Id, Name = model.Name, Abrv = model.Abrv, MakeId = make.Id, MakeName = make.Name }
-                                     ).SingleAsync();
+            try
+            {
+                var vehicleModelsQuery = await (
+                    from model in _context.VehicleModels.Where(model => model.Id == modelId)
+                    join make in _context.VehicleMakes on model.MakeId equals make.Id
+                    select new ReadModelDto { Id = model.Id, Name = model.Name, Abrv = model.Abrv, MakeId = make.Id, MakeName = make.Name })
+                    .SingleOrDefaultAsync();
 
-            return vehicleModelsQuery;
+                return vehicleModelsQuery;
+            }
+            catch(InvalidOperationException ex)
+            {
+                return null;
+            }     
         }
-
         public async Task<ActionResult<IEnumerable<ReadModelsDto>>> ReadVehicleModels()
         {
-            var vehicleModelsQuery = await(
-                                     from model in _context.VehicleModels
-                                     join make in _context.VehicleMakes on model.MakeId equals make.Id
-                                     select new ReadModelsDto { Name = model.Name, Abrv = model.Abrv, MakeName = make.Name }
-                                     ).ToListAsync();
+            var vehicleModelsQuery = await (
+                from model in _context.VehicleModels
+                join make in _context.VehicleMakes on model.MakeId equals make.Id
+                select new ReadModelsDto { Id =model.Id, Name = model.Name, Abrv = model.Abrv, MakeId = make.Id, MakeName = make.Name })
+                .ToListAsync();
 
             return vehicleModelsQuery;
         }
+        public async Task<ActionResult<IEnumerable<ReadOnlyModelsDto>>> ReadOnlyVehicleModels()
+        {
+            var vehicleModelsQuery = await(
+                from model in _context.VehicleModels
+                join make in _context.VehicleMakes on model.MakeId equals make.Id
+                select new ReadOnlyModelsDto { Name = model.Name, Abrv = model.Abrv, MakeName = make.Name })
+                .ToListAsync();
 
+            return vehicleModelsQuery;
+        }
         public async Task<ActionResult<PagedList<ReadModelsDto>>> ReadVehicleModels(PaginationParameters modelsPaginationPatameters)
         {
             var vehicleModelsQuery = from model in _context.VehicleModels
@@ -162,10 +194,9 @@ namespace Project.Service.Services
 
             return pagedList;
         }
-
-        public async Task<ActionResult<ReadModelDto>> UpdateVehicleModel(int modelId, UpdateModelDto updatedModel)
+        public async Task<ActionResult<ReadModelDto>> UpdateVehicleModel(UpdateModelDto updatedModel)
         {
-            var targetModel = (await ReadVehicleModel(modelId)).Value;
+            var targetModel = (await ReadVehicleModel(updatedModel.Id)).Value;
 
             if (targetModel != null)
             {
@@ -175,30 +206,29 @@ namespace Project.Service.Services
 
             return targetModel;
         }
-
-
         public async Task<ActionResult<ReadModelDto>> DeleteVehicleModel(int modelId)
         {
             var targetModel = (await ReadVehicleModel(modelId)).Value;
 
             if (targetModel != null)
             {
-
                 _context.VehicleModels.Remove(new VehicleModel { Id = modelId });
                 await _context.SaveChangesAsync();
             }
 
             return targetModel;
         }
+        
 
-        // Vehicles
-        public async Task<ActionResult<IEnumerable<ReadVehiclesDto>>> ReadVehicles()
+        //Vehicles
+        public async Task<ActionResult<IEnumerable<ReadOnlyVehiclesDto>>> ReadVehicles()
         {
             var vehiclesQuery = await (
-                                     from model in _context.VehicleModels
-                                     join make in _context.VehicleMakes on model.MakeId equals make.Id
-                                     select new ReadVehiclesDto { MakeName = make.Name, MakeAbrv = make.Abrv, ModelName = model.Name, ModelAbrv = model.Abrv }
-                                     ).ToListAsync();
+                from model in _context.VehicleModels
+                join make in _context.VehicleMakes on model.MakeId equals make.Id
+                select new ReadOnlyVehiclesDto { MakeName = make.Name, MakeAbrv = make.Abrv, ModelName = model.Name, ModelAbrv = model.Abrv })
+                .ToListAsync();
+
             return vehiclesQuery;
         }
     }

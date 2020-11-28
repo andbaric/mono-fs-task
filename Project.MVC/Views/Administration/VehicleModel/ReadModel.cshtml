@@ -1,42 +1,42 @@
-﻿@model Project.Service.Models.Entities.VehicleModel
+﻿@using Project.Service.Models.DTOs.VehicleAdministration.VehicleModels
+@model ReadModelDto
+
 
 @{
-    ViewData["Title"] = "ReadModel";
+    ViewData["Title"] = "Model info";
 }
 
-<h1>ReadModel</h1>
-
 <div>
-    <h4>VehicleModel</h4>
+    <h4>Vehicle model</h4>
+    <i class='fas fa-car-side fa-5x'></i>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
+        <dt class="col-sm-6 justify-content-end" style="display: flex;">
+            @Html.DisplayNameFor(model => model.MakeName):
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-6 justify-content-start" style="display: flex;">
+            @Html.DisplayFor(model => model.MakeName)
+        </dd>
+        <dt class="col-sm-6 justify-content-end" style="display: flex;">
+            @Html.DisplayNameFor(model => model.Name):
+        </dt>
+        <dd class="col-sm-6 justify-content-start" style="display: flex;">
             @Html.DisplayFor(model => model.Name)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Abrv)
+        <dt class="col-sm-6 justify-content-end" style="display: flex;">
+            @Html.DisplayNameFor(model => model.Abrv):
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-6 justify-content-start" style="display: flex;">
             @Html.DisplayFor(model => model.Abrv)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MakeId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MakeId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Id)
-        </dd>
     </dl>
-</div>
-<div>
-    @Html.ActionLink("Edit", "EditModel", new { id = Model.Id }) |
-    <a asp-action="AdministrateModels">Back to List</a>
+    <a asp-action="EditMake" asp-route-id="@Model.Id" role="button" class="btn btn-primary">
+        <i class="fas fa-edit"></i>
+        Edit
+    </a>
+    <hr />
+    <a asp-action="AdministrateModels" role="button" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i>
+        Back to grid
+    </a>
 </div>

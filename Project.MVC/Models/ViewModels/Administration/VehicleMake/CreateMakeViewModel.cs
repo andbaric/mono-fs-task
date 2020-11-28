@@ -1,12 +1,16 @@
 ﻿using Project.MVC.Models.Shared.Enums;
 using Project.MVC.Models.ViewModels.Shared;
-using System.Collections.Generic;
 
-namespace Project.MVC.Models.Administration.VehicleModel
+namespace Project.MVC.Models.ViewModels.Administration.VehicleMake
 {
-    public class CreateModelViewModel : IUserFriendlyViewModel
+    public class CreateMakeViewModel : IUserFriendlyViewModel
     {
-        public IDictionary<int, string> AvailableMakes { get; set; }
+        public CreateMakeViewModel()
+        {
+            Title = "Create new vehicle make";
+        }
+
+        public string Title { get; set; }        
         public string Name { get; set; }
         public string Abrv { get; set; }
         public FeedbackMessageType MessageType { get; set; }

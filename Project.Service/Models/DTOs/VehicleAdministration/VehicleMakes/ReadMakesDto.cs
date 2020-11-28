@@ -1,12 +1,9 @@
-﻿
-namespace Project.Service.Models.DTOs.VehicleAdministration.VehicleMakes
+﻿namespace Project.Service.Models.DTOs.VehicleAdministration.VehicleMakes
 {
-    // pagable
-    public class ReadMakesDto
+    public class ReadMakesDto : IIdentifier
     {
-        // filterable, sortable, custom data anotations
+        public int Id { get; set; }
         public string Name { get; set; }
-        // filterable, sortable, custom data anotations
         public string Abrv { get; set; }
     }
 }

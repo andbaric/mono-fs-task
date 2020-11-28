@@ -2,7 +2,7 @@
 
 @model IEnumerable<ReadMakesDto>
 
-<a role="button" href="#" class="btn btn-secondary btn-lg btn-block">
+<a asp-controller="administration" asp-action="CreateMake" role="button" class="btn btn-secondary btn-lg btn-block">
     <i class="fas fa-plus"></i>
     Create new make
 </a>
@@ -24,15 +24,15 @@
                 <td>@item.Name</td>
                 <td>@item.Abrv</td>
                 <td>
-                    <a role="button" href="#" class="btn btn-secondary">
+                    <a asp-controller="administration" asp-action="ReadMake" asp-route-id="@item.Id" role="button" class="btn btn-secondary">
                         <i class="fas fa-info-circle"></i>
                         Details
                     </a>
-                    <a role="button" href="#" class="btn btn-secondary">
+                    <a asp-controller="administration" asp-action="EditMake" asp-route-id="@item.Id" role="button" class="btn btn-secondary">
                         <i class="fas fa-edit"></i>
                         Edit
                     </a>
-                    <a role="button" href="#" class="btn btn-danger">
+                    <a asp-controller="administration" asp-action="DeleteMake" asp-route-id="@item.Id" role="button" class="btn btn-danger">
                         <i class="fas fa-trash"></i>
                         Delete
                     </a>

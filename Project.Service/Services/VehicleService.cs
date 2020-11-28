@@ -4,15 +4,17 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
-using Project.Service.Utils.PropertyMappingService;
 using Project.Service.Models.Entities;
+using Project.Service.Models.DTOs.VehicleAdministration.VehicleMakes;
+using Project.Service.Models.Mapper;
+using System.Linq;
 
 namespace Project.Service.Services
 {
     public class VehicleService : IVehicleService
     {
         private readonly VehicleDbContext _context;
-        public VehicleService(VehicleDbContext context, IPropertyMappingService propertyMappingService)
+        public VehicleService(VehicleDbContext context)
         {
             _context = context;
         }
@@ -28,11 +30,9 @@ namespace Project.Service.Services
 
         public async Task<ActionResult<VehicleMake>> GetVehicleMake(int makeId)
         {
-            var query = _context.VehicleMakes.AsQueryable();
-
             try
             {
-                return await query.SingleOrDefaultAsync(p => p.Id == makeId);
+                return await _context.VehicleMakes.Where(make => make.Id == makeId).SingleOrDefaultAsync();
             }
             catch (InvalidOperationException ex)
             {
@@ -45,15 +45,18 @@ namespace Project.Service.Services
             return await _context.VehicleMakes.ToListAsync();
         }
 
-        public async Task<ActionResult<VehicleMake>> UpdateVehicleMake(int makeId, VehicleMake updatedVehicleMake)
+        public async Task<ActionResult<VehicleMake>> UpdateVehicleMake(VehicleMake updatedMake)
         {
-            var existingMake = (await GetVehicleMake(makeId)).Value;
-            _context.Entry(existingMake).CurrentValues.SetValues(updatedVehicleMake);
-            await _context.SaveChangesAsync();
+            var targetMake = await _context.VehicleMakes.Where(make => make.Id == updatedMake.Id).SingleAsync();
+            
+            if (targetMake != null)
+            {
+                _context.Entry(targetMake).CurrentValues.SetValues(updatedMake);
+                await _context.SaveChangesAsync();
+            }
 
-            return existingMake;
+            return updatedMake;
         }
-
         public async Task<ActionResult<VehicleMake>> DeleteVehicleMake(int makeId)
         {
             var targetMake = (await GetVehicleMake(makeId)).Value;

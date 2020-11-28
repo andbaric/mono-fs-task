@@ -1,6 +1,7 @@
-﻿namespace Project.Service.Models.DTOs.VehicleAdministration.VehicleMakes
+﻿
+namespace Project.MVC.Models.Administration.Make
 {
-    public class ReadMakeDto : IIdentifier
+    public class MakeTableDataViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }

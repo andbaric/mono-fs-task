@@ -31,7 +31,7 @@ namespace Project.MVC.Models.ViewModels.Administration.VehicleModel
 
         public override string SetTitle()
         {
-            return "Models administracion";
+            return "Models administration";
         }
     }
 }

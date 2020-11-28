@@ -1,8 +1,8 @@
-﻿@*@using Project.MVC.Models.Administration.VehicleMake;
-@model CreateMakeViewModel
+﻿@using Project.MVC.Models.ViewModels.Administration.VehicleMake
+@model CreateMakeViewModel 
 
 @{
-    ViewData["Title"] = "Create vehicle make";
+    ViewData["Title"] = "Create make";
 }
 
 <h4>New make</h4>
@@ -24,15 +24,17 @@
                 <span asp-validation-for="Abrv" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create make" class="btn btn-primary" />
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-plus"></i>
+                    Create
+                </button>
             </div>
         </form>
         <hr />
+        <a asp-action="AdministrateMakes" role="button" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i>
+            Back to grid
+        </a>
     </div>
 </div>
 
-<div>
-    <a asp-action="AdministrateMakes">Back to List</a>
-</div>
-
-*@

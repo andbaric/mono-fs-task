@@ -7,7 +7,7 @@
 
 @{ if (Model.Type == GridType.Mvc)
     {
-        if (Model.DataSource is IEnumerable<ReadVehiclesDto>)
+        if (Model.DataSource is IEnumerable<ReadOnlyVehiclesDto>)
         {
             <partial name="~/Views/Shared/Grid/Mvc/_VehiclesAdministration.cshtml" model="Model.DataSource" />
         }
@@ -22,7 +22,7 @@
     }
     else
     {
-        if (Model.DataSource is IEnumerable<ReadVehiclesDto>)
+        if (Model.DataSource is IEnumerable<ReadOnlyVehiclesDto>)
         {
             <partial name="~/Views/Shared/Grid/Custom/_VehiclesAdministration.cshtml" model="Model.DataSource" />
         }

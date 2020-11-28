@@ -10,7 +10,7 @@ namespace Project.MVC.Models.Administration
 {
     public static class AdministationExtensions
     {
-        public static VehiclesAdministrationViewModel GetAdministrationView(this IEnumerable<ReadVehiclesDto> source, string currentAction, string gridView)
+        public static VehiclesAdministrationViewModel GetAdministrationView(this IEnumerable<ReadOnlyVehiclesDto> source, string currentAction, string gridView)
         {
             return VehiclesAdministrationViewModel.GetView(source, currentAction, gridView);
         }

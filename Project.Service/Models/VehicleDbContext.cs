@@ -18,5 +18,5 @@ namespace Project.Service.Models
                 modelBuilder.DecribeRelationships();
                 modelBuilder.SeedData();
             }
-      }
+    }
 }

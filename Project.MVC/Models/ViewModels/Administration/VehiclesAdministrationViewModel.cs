@@ -5,23 +5,23 @@ using System.Collections.Generic;
 
 namespace Project.MVC.Models.ViewModels.Administration
 {
-    public sealed class VehiclesAdministrationViewModel : AdministrationViewModelBase<ReadVehiclesDto>
+    public sealed class VehiclesAdministrationViewModel : AdministrationViewModelBase<ReadOnlyVehiclesDto>
     {
-        public VehiclesAdministrationViewModel(IEnumerable<ReadVehiclesDto> source, string currentAction, string gridView)
+        public VehiclesAdministrationViewModel(IEnumerable<ReadOnlyVehiclesDto> source, string currentAction, string gridView)
         {
             Title = SetTitle();
             Navigation = SetNavigation(gridView);
             Grid = SetGrid(source, currentAction, gridView);
         }
 
-        public static VehiclesAdministrationViewModel GetView(IEnumerable<ReadVehiclesDto> source, string currentAction, string gridView)
+        public static VehiclesAdministrationViewModel GetView(IEnumerable<ReadOnlyVehiclesDto> source, string currentAction, string gridView)
         {
             return new VehiclesAdministrationViewModel(source, currentAction, gridView);
         }
 
-        public override GridViewModel<ReadVehiclesDto> SetGrid(IEnumerable<ReadVehiclesDto> source, string currentAction, string gridView)
+        public override GridViewModel<ReadOnlyVehiclesDto> SetGrid(IEnumerable<ReadOnlyVehiclesDto> source, string currentAction, string gridView)
         {
-            return new GridViewModel<ReadVehiclesDto>(source, currentAction, gridView);
+            return new GridViewModel<ReadOnlyVehiclesDto>(source, currentAction, gridView);
         }
 
         public override AdministrationNavigationViewModel SetNavigation(string currentGridView)

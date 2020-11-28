@@ -12,7 +12,7 @@ namespace Project.Service.Services
         Task<ActionResult<VehicleMake>> CreateVehicleMake(VehicleMake newVehicleMake);
         Task<ActionResult<VehicleMake>>GetVehicleMake(int makeId);
         Task<ActionResult<IEnumerable<VehicleMake>>> GetVehicleMakes();
-        Task<ActionResult<VehicleMake>> UpdateVehicleMake(int makeId, VehicleMake updatedMake);
+        Task<ActionResult<VehicleMake>> UpdateVehicleMake(VehicleMake updatedMake);
         Task<ActionResult<VehicleMake>> DeleteVehicleMake(int makeId);
 
         Task<ActionResult<VehicleModel>> CreateVehicleModel(VehicleModel newVehicleModel);

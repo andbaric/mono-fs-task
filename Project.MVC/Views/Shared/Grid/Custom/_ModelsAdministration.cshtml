@@ -2,9 +2,9 @@
 
 @model IEnumerable<ReadModelsDto>
 
-<a role="button" href="#" class="btn btn-secondary btn-lg btn-block">
+<a a asp-controller="administration" asp-action="CreateModel" role="button" class="btn btn-secondary btn-lg btn-block">
     <i class="fas fa-plus"></i>
-    New model
+    Create new model
 </a>
 <table class="table table-striped table-bordered">
     <thead>
@@ -26,15 +26,15 @@
             <td>@item.Name</td>
             <td>@item.Abrv</td>
             <td>
-                <a role="button" href="#" class="btn btn-secondary">
+                <a asp-controller="administration" asp-action="ReadModel" asp-route-id="@item.Id" role="button" class="btn btn-secondary">
                     <i class="fas fa-info-circle"></i>
                     Details
                 </a>
-                <a role="button" href="#" class="btn btn-secondary">
+                <a asp-controller="administration" asp-action="EditModel" asp-route-id="@item.Id" role="button" class="btn btn-secondary">
                     <i class="fas fa-edit"></i>
                     Edit
                 </a>
-                <a role="button" href="#" class="btn btn-danger">
+                <a asp-controller="administration" asp-action="DeleteModel" asp-route-id="@item.Id" role="button" class="btn btn-danger">
                     <i class="fas fa-trash"></i>
                     Delete
                 </a>

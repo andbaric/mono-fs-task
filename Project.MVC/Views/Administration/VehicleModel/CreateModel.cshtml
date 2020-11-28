@@ -13,8 +13,8 @@
         <form asp-action="CreateModel" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group" style="display: flex; flex-direction: column;">
-                <label asp-for="MakeId" class="control-label">Make</label>
-                @Html.DropDownListFor(m => m.MakeId, (SelectList)ViewBag.AvailableMakes)
+         @*       <label asp-for="MakeId" class="control-label">Make</label>
+                @Html.DropDownListFor(m => m.MakeId, (SelectList)ViewBag.AvailableMakes)*@
             </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>

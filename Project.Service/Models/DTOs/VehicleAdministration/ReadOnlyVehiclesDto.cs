@@ -1,7 +1,6 @@
 ﻿namespace Project.Service.Models.DTOs.VehicleAdministration
-
 {
-    public class ReadVehiclesDto
+    public class ReadOnlyVehiclesDto
     {
         public string MakeName { get; set; }
         public string MakeAbrv { get; set; }
